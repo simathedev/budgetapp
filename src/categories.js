@@ -1,0 +1,36 @@
+/*import {
+    Fastfood ,
+    DirectionsBus,
+    Restaurant,
+    Construction,
+    SelfImprovement,
+    Flight,
+    Movie,
+    ShoppingBag,
+    School,
+    Paid,
+    AccountBalance,
+    House,
+    VolunteerActivism,
+    Savings,
+    Category,
+  } from '@mui/icons-material'
+  
+  export const categories = [
+    { name: 'Groceries', icon: <Fastfood /> },
+    { name: 'Transportation', icon: <DirectionsBus /> },
+    { name: 'Dining Out', icon: <Restaurant /> },
+    { name: 'Utilities', icon: <Construction /> },
+    { name: 'Personal Care', icon: <SelfImprovement /> },
+    { name: 'Travel', icon: <Flight /> },
+    { name: 'Entertainment', icon: <Movie /> },
+    { name: 'Shopping', icon: <ShoppingBag /> },
+    { name: 'Education', icon: <School /> },
+    { name: 'Salary', icon: <Paid /> },
+    { name: 'Debt Payments', icon: <AccountBalance /> },
+    { name: 'Housing', icon: <House /> },
+    { name: 'Charity', icon: <VolunteerActivism /> },
+    { name: 'Investments', icon: <Savings /> },
+    { name: 'Other', icon: <Category /> },
+  ];*/
+  
