@@ -45,7 +45,7 @@ const Form=()=>
     const goal=async(values,onSubmitProps)=>{
         try {
         const goalResponse=await fetch(
-          `http://budget-app-api-ecru.vercel.app/goals/addGoal`,
+          `https://budget-app-api-ecru.vercel.app/goals/addGoal`,
           {
             method:"POST",
             headers: {

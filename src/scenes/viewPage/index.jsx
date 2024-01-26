@@ -69,22 +69,22 @@ const ViewPage=()=>{
         switch (pageType) {
             case 'expenses':
                 fetchOptions = {
-                    fetchURL: `http://budget-app-api-ecru.vercel.app/expenses/getExpenses/${userId}`,
+                    fetchURL: `https://budget-app-api-ecru.vercel.app/expenses/getExpenses/${userId}`,
                 };
                 break;
             case 'savings':
                 fetchOptions = {
-                    fetchURL: `http://budget-app-api-ecru.vercel.app/savings/getSavings/${userId}`,
+                    fetchURL: `https://budget-app-api-ecru.vercel.app/savings/getSavings/${userId}`,
                 };
                 break;
             case 'goals':
                 fetchOptions = {
-                    fetchURL: `http://budget-app-api-ecru.vercel.app/goals/getGoals/${userId}`,
+                    fetchURL: `https://budget-app-api-ecru.vercel.app/goals/getGoals/${userId}`,
                 };
                 break;
             case 'transactions':
                 fetchOptions = {
-                    fetchURL: `http://budget-app-api-ecru.vercel.app/balance/getBalance/${userId}`,
+                    fetchURL: `https://budget-app-api-ecru.vercel.app/balance/getBalance/${userId}`,
                 };
                 break;
             default:
@@ -119,12 +119,12 @@ const ViewPage=()=>{
         switch (pageType) {
             case 'expenses':
                 fetchOptions = {
-                    fetchURL: `http://budget-app-api-ecru.vercel.app/expenses/groupExpenses/${userId}`,
+                    fetchURL: `https://budget-app-api-ecru.vercel.app/expenses/groupExpenses/${userId}`,
                 };
                 break;
             case 'savings':
                 fetchOptions = {
-                    fetchURL: `http://budget-app-api-ecru.vercel.app/savings/groupSavings/${userId}`,
+                    fetchURL: `https://budget-app-api-ecru.vercel.app/savings/groupSavings/${userId}`,
                 };
             default:
                 break;
@@ -167,17 +167,17 @@ const ViewPage=()=>{
           switch (pageType) {
               case 'expenses':
                   fetchOptions = {
-                      fetchURL: `http://budget-app-api-ecru.vercel.app/expenses/deleteExpense/${id}`,
+                      fetchURL: `https://budget-app-api-ecru.vercel.app/expenses/deleteExpense/${id}`,
                   };
                   break;
               case 'savings':
                   fetchOptions = {
-                      fetchURL: `http://budget-app-api-ecru.vercel.app/savings/deleteSaving/${id}`,
+                      fetchURL: `https://budget-app-api-ecru.vercel.app/savings/deleteSaving/${id}`,
                   };
                   break;
               case 'goals':
                   fetchOptions = {
-                      fetchURL: `http://budget-app-api-ecru.vercel.app/goals/deleteGoal/${id}`,
+                      fetchURL: `https://budget-app-api-ecru.vercel.app/goals/deleteGoal/${id}`,
                   };
                   break;
                   case 'transactions':
@@ -186,12 +186,12 @@ const ViewPage=()=>{
                     if (selectedItem){
                         if (selectedItem.type === 'expense') {
                             fetchOptions = {
-                                fetchURL: `http://budget-app-api-ecru.vercel.app/expenses/deleteExpense/${id}`,
+                                fetchURL: `https://budget-app-api-ecru.vercel.app/expenses/deleteExpense/${id}`,
                                
                             };
                         } else {
                             fetchOptions = {
-                                fetchURL: `http://budget-app-api-ecru.vercel.app/savings/deleteSaving/${id}`,
+                                fetchURL: `https://budget-app-api-ecru.vercel.app/savings/deleteSaving/${id}`,
                                
                             };
                     }

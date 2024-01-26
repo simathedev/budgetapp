@@ -71,7 +71,7 @@ const Form=()=>{
 
     const getGoals=async(id)=>{
 console.log("id:",id)
-        const response = await fetch(`http://budget-app-api-ecru.vercel.app/goals/getGoal/${id}`, {
+        const response = await fetch(`https://budget-app-api-ecru.vercel.app/goals/getGoal/${id}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -107,7 +107,7 @@ console.log("id:",id)
         try{
             const goalResponse=await fetch(
                 //CHECK THE URL AND FIX
-              `http://budget-app-api-ecru.vercel.app/goals/updateGoal/${id}`,
+              `https://budget-app-api-ecru.vercel.app/goals/updateGoal/${id}`,
                 {
                   method:"PUT",
                   headers: {

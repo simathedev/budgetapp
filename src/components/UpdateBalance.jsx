@@ -3,7 +3,7 @@ const UpdateBalance = async (currentBalance, token, userId) => {
   try {
     const values={balance: currentBalance} 
     const balanceResponse = await fetch(
-      `http://budget-app-api-ecru.vercel.app/balance/updateBalance/${userId}`,
+      `https://budget-app-api-ecru.vercel.app/balance/updateBalance/${userId}`,
       {
         method: "PUT",
         headers: {
