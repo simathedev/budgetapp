@@ -96,7 +96,7 @@ import UpdateBalance from "../../components/UpdateBalance";
     
     const getCategories=async()=>{
         const categoryResponse=await fetch(
-            `httpsbudget-app-api-ecru.vercel.app/categories`,{
+            `https://budget-app-api-ecru.vercel.app/categories`,{
                 method:"GET",
                 headers: { Authorization: `Bearer ${token}` },
 
