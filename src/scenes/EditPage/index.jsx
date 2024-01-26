@@ -3,6 +3,9 @@ import Navbar from "../navbar";
 import {Box,Typography,useTheme,useMediaQuery} from "@mui/material";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import BackButton from '../../components/BackButton';
+import { Link } from "react-router-dom";
+
 
 
 const EditPage=()=>{
@@ -15,6 +18,9 @@ const EditPage=()=>{
     return(
        <Box>
         <Navbar/>
+        <Link to={`/view/${pageType}`}>
+        <BackButton/>
+        </Link>
         <Box
             width={isNonMobileScreens?"70%":"93%"}
             p="2rem"

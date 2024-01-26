@@ -1,13 +1,13 @@
 // PlusIcon.js
 import React from 'react';
-import IconButton from '@mui/material/IconButton';
+import {Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 const AddButton = ({ onClick }) => {
   return (
-    <IconButton color="primary" onClick={onClick}>
-      <AddIcon />
-    </IconButton>
+    <Button variant="outlined" color="primary" onClick={onClick}>
+      <AddIcon />Add
+    </Button>
   );
 };
 

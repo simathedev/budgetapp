@@ -3,7 +3,7 @@ import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const BackIcon = ({ onClick }) => {
+const BackButton = ({ onClick }) => {
   return (
     <IconButton color="primary" onClick={onClick}>
       <ArrowBackIcon />
@@ -11,4 +11,4 @@ const BackIcon = ({ onClick }) => {
   );
 };
 
-export default BackIcon;
+export default BackButton;

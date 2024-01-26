@@ -37,7 +37,7 @@ const ExpenseWidget=()=>{
 
     const getTotalExpenses=async()=>{
         try{
-            const response = await fetch(`http://localhost:3001/expenses/getExpenseTotal/${userId}`, {
+            const response = await fetch(`http://budget-app-api-ecru.vercel.app/expenses/getExpenseTotal/${userId}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,

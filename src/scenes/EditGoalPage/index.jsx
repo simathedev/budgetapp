@@ -3,6 +3,8 @@ import Navbar from "../navbar";
 import {Box,Typography,useTheme,useMediaQuery} from "@mui/material";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import {Link} from 'react-router-dom';
+import BackButton from "../../components/BackButton";
 
 
 const EditGoalPage=()=>{
@@ -15,6 +17,9 @@ const EditGoalPage=()=>{
     return(
        <Box>
         <Navbar/>
+        <Link to={`/view/goals`}>
+        <BackButton/>
+        </Link>
         <Box
             width={isNonMobileScreens?"70%":"93%"}
             p="2rem"

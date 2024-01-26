@@ -30,12 +30,10 @@ import CreditsWidget from "../../components/Credits";
     const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
    const[helpClick,setHelpClicked]=useState(false);
-    //const fullName = `Simanye Magwa`;
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
     const selectedCurrency = useSelector(state => state.selectedCurrency);
-    //console.log("selected currency: ",selectedCurrency);
     const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
@@ -51,7 +49,6 @@ import CreditsWidget from "../../components/Credits";
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   const fullName = `${capitalizeFirstLetter(user.firstName)} ${capitalizeFirstLetter(user.lastName)}`;
-    //const theme=useTheme();
 
     return(
       <>

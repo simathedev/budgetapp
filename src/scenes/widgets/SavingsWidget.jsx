@@ -28,7 +28,7 @@ const SavingsWidget=()=>{
    
    const getTotalSavings=async()=>{
     try{
-      const response = await fetch(`http://localhost:3001/savings/getSavingsTotal/${userId}`, {
+      const response = await fetch(`http://budget-app-api-ecru.vercel.app/savings/getSavingsTotal/${userId}`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${token}`,

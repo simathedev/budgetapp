@@ -82,7 +82,7 @@ import UpdateBalance from "../../components/UpdateBalance";
 
     /*const updateBalance=async()=>{
       const balanceResponse=await fetch(
-        `http://localhost:3001/balance/updateBalance/${user._id}`,
+        `http://budget-app-api-ecru.vercel.app/balance/updateBalance/${user._id}`,
         {
           method:"POST",
           headers: {
@@ -96,7 +96,7 @@ import UpdateBalance from "../../components/UpdateBalance";
     
     const getCategories=async()=>{
         const categoryResponse=await fetch(
-            `http://localhost:3001/categories`,{
+            `http://budget-app-api-ecru.vercel.app/categories`,{
                 method:"GET",
                 headers: { Authorization: `Bearer ${token}` },
 
@@ -115,7 +115,7 @@ import UpdateBalance from "../../components/UpdateBalance";
         try{
             const expenseResponse=await fetch(
                 //CHECK THE URL AND FIX
-              `http://localhost:3001/expenses/addExpense`,
+              `http://budget-app-api-ecru.vercel.app/expenses/addExpense`,
                 {
                   method:"POST",
                   headers: {
@@ -150,7 +150,7 @@ import UpdateBalance from "../../components/UpdateBalance";
        try{
         const savingResponse=await fetch(
           //CHECK THE URL AND FIX
-          `http://localhost:3001/savings/addSaving`,
+          `http://budget-app-api-ecru.vercel.app/savings/addSaving`,
           {
             method:"POST",
             headers: {

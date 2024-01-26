@@ -76,7 +76,7 @@ const Form=()=>{
 
     const getCategories=async()=>{
         const categoryResponse=await fetch(
-            `http://localhost:3001/categories`,{
+            `http://budget-app-api-ecru.vercel.app/categories`,{
                 method:"GET",
                 headers: { Authorization: `Bearer ${token}` },
 
@@ -94,12 +94,12 @@ const Form=()=>{
         {
             case 'expenses':
             fetchOptions = {
-                fetchURL:  `http://localhost:3001/expenses/getExpense/${id}`,
+                fetchURL:  `http://budget-app-api-ecru.vercel.app/expenses/getExpense/${id}`,
              };
              break;
              case 'savings':
                 fetchOptions = {
-                    fetchURL:   `http://localhost:3001/savings/getSaving/${id}`,
+                    fetchURL:   `http://budget-app-api-ecru.vercel.app/savings/getSaving/${id}`,
                  };
         break;
         default:
@@ -177,7 +177,7 @@ const Form=()=>{
         try{
             const expenseResponse=await fetch(
                 //CHECK THE URL AND FIX
-              `http://localhost:3001/expenses/updateExpense/${id}`,
+              `http://budget-app-api-ecru.vercel.app/expenses/updateExpense/${id}`,
                 {
                   method:"PUT",
                   headers: {
@@ -213,7 +213,7 @@ const Form=()=>{
         try{
          const savingResponse=await fetch(
            //CHECK THE URL AND FIX
-           `http://localhost:3001/savings/updateSaving/${id}`,
+           `http://budget-app-api-ecru.vercel.app/savings/updateSaving/${id}`,
            {
              method:"PUT",
              headers: {

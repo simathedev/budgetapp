@@ -48,7 +48,7 @@ const Form=()=>{
 
     const register=async (values,onSubmitProps)=>{
       /*const savedUserResponse=await fetch(
-        `http://localhost:3001/add/goal/${userId}`,
+        `http://budget-app-api-ecru.vercel.app/add/goal/${userId}`,
         {
           method:"POST",
           headers: {
@@ -68,7 +68,7 @@ const Form=()=>{
 
     const login=async(values,onSubmitProps)=>{
      /* const loggedInResponse=await fetch(
-        "http://localhost:3001/auth/login",
+        "http://budget-app-api-ecru.vercel.app/auth/login",
         {
           method:"POST",
           headers: { "Content-Type": "application/json" },

@@ -1,7 +1,8 @@
 import Form from "./form";
 import {Box,Typography,useTheme,useMediaQuery} from "@mui/material";
 import Navbar from "../../scenes/navbar";
-
+import {Link} from 'react-router-dom';
+import BackButton from "../../components/BackButton";
 
 const GoalPage=()=>{
 const theme=useTheme();
@@ -10,6 +11,9 @@ const isNonMobileScreens=useMediaQuery("(min-width:100px)");
     return(
         <Box>
        <Navbar/>
+       <Link to={`/view/goals`}>
+        <BackButton/>
+        </Link>
         <Box
         width={isNonMobileScreens?"50%":"93%"}
         p="2rem"

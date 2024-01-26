@@ -22,12 +22,15 @@ import { useState,useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { isAction } from "@reduxjs/toolkit";
+import { Link } from "react-router-dom";
 import { ConstructionOutlined, ContactSupportOutlined } from "@mui/icons-material";
 import DeleteItem from "../../components/DeleteItem";
 import { setBalance } from "../../state";
 import UpdateBalance from "../../components/UpdateBalance";
 import TopCategoryWidget from "../widgets/TopCategoryWidget";
 import AddAmount from "../../components/AddGoalAmount";
+import AddButton from '../../components/AddButton';
+import BackButton from '../../components/BackButton';
 
 
 const ViewPage=()=>{
@@ -56,7 +59,8 @@ const ViewPage=()=>{
     const isTransaction=pageType==="transactions";
     const handleGoalAmount = () => {
       setOpenAddAmount((prevOpenAddAmount) => !prevOpenAddAmount);
-      };
+      getData('goals');
+    };
     let fetchURL="";
 
     const getData = async (pageType) => {
@@ -65,22 +69,22 @@ const ViewPage=()=>{
         switch (pageType) {
             case 'expenses':
                 fetchOptions = {
-                    fetchURL: `http://localhost:3001/expenses/getExpenses/${userId}`,
+                    fetchURL: `http://budget-app-api-ecru.vercel.app/expenses/getExpenses/${userId}`,
                 };
                 break;
             case 'savings':
                 fetchOptions = {
-                    fetchURL: `http://localhost:3001/savings/getSavings/${userId}`,
+                    fetchURL: `http://budget-app-api-ecru.vercel.app/savings/getSavings/${userId}`,
                 };
                 break;
             case 'goals':
                 fetchOptions = {
-                    fetchURL: `http://localhost:3001/goals/getGoals/${userId}`,
+                    fetchURL: `http://budget-app-api-ecru.vercel.app/goals/getGoals/${userId}`,
                 };
                 break;
             case 'transactions':
                 fetchOptions = {
-                    fetchURL: `http://localhost:3001/balance/getBalance/${userId}`,
+                    fetchURL: `http://budget-app-api-ecru.vercel.app/balance/getBalance/${userId}`,
                 };
                 break;
             default:
@@ -115,12 +119,12 @@ const ViewPage=()=>{
         switch (pageType) {
             case 'expenses':
                 fetchOptions = {
-                    fetchURL: `http://localhost:3001/expenses/groupExpenses/${userId}`,
+                    fetchURL: `http://budget-app-api-ecru.vercel.app/expenses/groupExpenses/${userId}`,
                 };
                 break;
             case 'savings':
                 fetchOptions = {
-                    fetchURL: `http://localhost:3001/savings/groupSavings/${userId}`,
+                    fetchURL: `http://budget-app-api-ecru.vercel.app/savings/groupSavings/${userId}`,
                 };
             default:
                 break;
@@ -151,7 +155,7 @@ const ViewPage=()=>{
         getGroupedCategories(pageType);
     }
        
-    },[pageType,categoryData]);
+    },[pageType]);
 
     
     const handleDelete = async (pageType,responseData,itemId) => {
@@ -163,17 +167,17 @@ const ViewPage=()=>{
           switch (pageType) {
               case 'expenses':
                   fetchOptions = {
-                      fetchURL: `http://localhost:3001/expenses/deleteExpense/${id}`,
+                      fetchURL: `http://budget-app-api-ecru.vercel.app/expenses/deleteExpense/${id}`,
                   };
                   break;
               case 'savings':
                   fetchOptions = {
-                      fetchURL: `http://localhost:3001/savings/deleteSaving/${id}`,
+                      fetchURL: `http://budget-app-api-ecru.vercel.app/savings/deleteSaving/${id}`,
                   };
                   break;
               case 'goals':
                   fetchOptions = {
-                      fetchURL: `http://localhost:3001/goals/deleteGoal/${id}`,
+                      fetchURL: `http://budget-app-api-ecru.vercel.app/goals/deleteGoal/${id}`,
                   };
                   break;
                   case 'transactions':
@@ -182,12 +186,12 @@ const ViewPage=()=>{
                     if (selectedItem){
                         if (selectedItem.type === 'expense') {
                             fetchOptions = {
-                                fetchURL: `http://localhost:3001/expenses/deleteExpense/${id}`,
+                                fetchURL: `http://budget-app-api-ecru.vercel.app/expenses/deleteExpense/${id}`,
                                
                             };
                         } else {
                             fetchOptions = {
-                                fetchURL: `http://localhost:3001/savings/deleteSaving/${id}`,
+                                fetchURL: `http://budget-app-api-ecru.vercel.app/savings/deleteSaving/${id}`,
                                
                             };
                     }
@@ -233,16 +237,14 @@ const ViewPage=()=>{
                else{
                 console.log("data type is not expense or saving in delete function")
                }
-            setDeleteItemId(null); // Refresh the data
+            setDeleteItemId(null);
                getData(pageType)
+               getGroupedCategories(pageType);
             } else {
                 // Handle error case
                 console.log("Error deleting item:", response.statusText);
             }
         }
-          // After successful deletion, update the responseData state
-    
-          // Close the delete confirmation popup
           console.log(deleteItemId);
          
         }
@@ -260,14 +262,29 @@ return(
       fontSize="24px"
     >
     View {pageType}
-    </Typography>
 
-    {isGoal?(
+    </Typography>
+    <Link to='/home'>
+
+    <BackButton/>
+   
+    </Link>
+     {isGoal?(
 <>
 <Box padding="0rem 3rem">
     <TableContainer>
         <Table>
             <TableBody>
+            <TableRow>
+                   
+                   {pageType !== 'transactions' && (
+                       <Link to={`/add/${pageType}`}>
+                        <AddButton/>
+                        </Link>
+                       )}
+                 
+                  </TableRow>
+            
                 {responseData.length === 0 ? (
                     <TableRow style={{ border: 'none' }}>
                         <TableCell colSpan={3} align="center" style={{ border: 'none' }}>
@@ -291,7 +308,7 @@ return(
       textAlign="center"
       fontSize="16px"
       onClick={() => {
-       navigate(`/add/${pageType}`);
+       navigate(`/add/goal`);
       }}
     >
   Create {pageType}!
@@ -308,7 +325,7 @@ return(
                                 </div>
                             </TableCell>
                             <TableCell style={{ textAlign: 'center' }}>
-                                <div>{selectedCurrSymbol} {parseFloat(data.currentBalance*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 2, })} / {selectedCurrSymbol} {parseFloat(data.targetAmount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 1, })}</div>
+                                <div>{selectedCurrSymbol} {parseFloat(data.currentBalance*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 2, })} / {selectedCurrSymbol} {parseFloat(data.targetAmount*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 1, })}</div>
                                 <div><LinearProgress
                                     variant="determinate"
                                     value={(data.currentBalance / data.targetAmount) * 100}
@@ -360,11 +377,20 @@ return(
 
     ):(
         <>
-        <TopCategoryWidget categoryData={categoryData}/>
+        <TopCategoryWidget categoryData={categoryData}/>   
             <Box padding="0rem 3rem">
     <TableContainer>
         <Table>
             <TableBody>
+            <TableRow>
+                   
+                    {pageType !== 'transactions' && (
+                        <Link to={`/add/${pageType}`}>
+                         <AddButton/>
+                         </Link>
+                        )}
+                  
+                   </TableRow>
             {responseData.length === 0 ? (
                     <TableRow style={{ border: 'none' }}>
                         <TableCell colSpan={3} align="center" style={{ border: 'none' }}>
@@ -396,6 +422,7 @@ return(
                         </TableCell>
                     </TableRow>
                 ) : (
+                        
                 responseData.map((data) => (
                     <TableRow key={data._id}>
                         <TableCell style={{ width: isTransaction ? '20%' : '40%',paddingLeft:isTransaction?'4rem':'2rem'}}>

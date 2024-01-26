@@ -13,6 +13,7 @@ import {
 const TopCategoryWidget = ({ categoryData }) => {
   const { palette } = useTheme();
   const selectedCurrSymbol = useSelector((state) => state.selectedCurrSymbol);
+  const selectedExchangeRate=useSelector((state)=>state.selectedExchangeRate);
   const categoryIcons = {
     Transportation: <DirectionsBus/>,
     Other: <Category/>,
@@ -61,7 +62,7 @@ const TopCategoryWidget = ({ categoryData }) => {
             >
               {categoryIcons[category.replace(/\s/g, '')]}
               <Typography sx={{fontWeight:'700',fontSize:'1rem',my:1}}>{category}</Typography>
-              <Typography>{`${selectedCurrSymbol} ${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 2, })}`}</Typography>
+              <Typography>{`${selectedCurrSymbol} ${(total*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 2, })}`}</Typography>
             </Box>
           </Grid>
         ))}

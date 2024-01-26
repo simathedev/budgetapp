@@ -27,7 +27,7 @@ const AddAmount = ({ currentAmount, onClose, goalId }) => {
     console.log('amount to add in goal:', parsedAmount);
     if (!isNaN(parsedAmount) && parsedAmount >= 0) {
       try {
-        const response = await fetch(`http://localhost:3001/goals/addGoalAmount/${goalId}`, {
+        const response = await fetch(`http://budget-app-api-ecru.vercel.app/goals/addGoalAmount/${goalId}`, {
           method:"PUT",
                   headers: {
                     Authorization: `Bearer ${token}`,
