@@ -75,8 +75,14 @@ const Form=()=>{
     });
 
     const getCategories=async()=>{
+      const apiUrl=process.env.NODE_ENV === 'production' ?
+      `https://budget-app-api-ecru.vercel.app/categories`
+      :
+      `http://localhost:3001/categories`
+
         const categoryResponse=await fetch(
-            `https://budget-app-api-ecru.vercel.app/categories`,{
+            //`https://budget-app-api-ecru.vercel.app/categories`
+            apiUrl,{
                 method:"GET",
                 headers: { Authorization: `Bearer ${token}` },
 
@@ -90,16 +96,20 @@ const Form=()=>{
         let fetchOptions = {};
         console.log("pagetype:",pageType)
         console.log("id:",id)
+        const apiUrl=process.env.NODE_ENV === 'production' ?
+        `https://budget-app-api-ecru.vercel.app`
+        :
+        `http://localhost:3001`
         switch(pageType)
         {
             case 'expenses':
             fetchOptions = {
-                fetchURL:  `https://budget-app-api-ecru.vercel.app/expenses/getExpense/${id}`,
+                fetchURL:  `${apiUrl}/expenses/getExpense/${id}`,
              };
              break;
              case 'savings':
                 fetchOptions = {
-                    fetchURL:   `https://budget-app-api-ecru.vercel.app/savings/getSaving/${id}`,
+                    fetchURL:   `${apiUrl}/savings/getSaving/${id}`,
                  };
         break;
         default:
@@ -211,9 +221,14 @@ const Form=()=>{
 
     const updateSaving=async(values,onSubmitProps)=>{
         try{
+          const apiUrl= process.env.NODE_ENV === 'production' ?
+          `https://budget-app-api-ecru.vercel.app/savings/updateSaving/${id}`
+          :
+          `http://localhost:3001/savings/updateSaving/${id}`
          const savingResponse=await fetch(
            //CHECK THE URL AND FIX
-           `https://budget-app-api-ecru.vercel.app/savings/updateSaving/${id}`,
+           //`https://budget-app-api-ecru.vercel.app/savings/updateSaving/${id}`
+           apiUrl,
            {
              method:"PUT",
              headers: {
@@ -372,7 +387,7 @@ return(
                 
                >
                {categories.map((category) => (
-        <Grid item xs={4} key={category._id} >
+        <Grid item xs={6} sm={6} md={4} key={category._id} >
           <Button
             variant="outlined"
             fullWidth
@@ -384,6 +399,8 @@ return(
                 setSelectedCategory(category.name)
               }} 
                sx={{
+                height: "52px",
+                fontSize:isNonMobile?'14px':'11px',
               backgroundColor:
                 selectedCategory === category.name ?` ${palette.primary.main}` : "transparent",
                 color: selectedCategory === category.name ?`${palette.background.alt}`:`${palette.primary.main}`,

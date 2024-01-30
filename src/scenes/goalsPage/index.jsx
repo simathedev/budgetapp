@@ -6,7 +6,7 @@ import BackButton from "../../components/BackButton";
 
 const GoalPage=()=>{
 const theme=useTheme();
-const isNonMobileScreens=useMediaQuery("(min-width:100px)");
+const isNonMobileScreens=useMediaQuery("(min-width:600px)");
 
     return(
         <Box>
@@ -15,7 +15,7 @@ const isNonMobileScreens=useMediaQuery("(min-width:100px)");
         <BackButton/>
         </Link>
         <Box
-        width={isNonMobileScreens?"50%":"93%"}
+        width={isNonMobileScreens?"70%":"85%"}
         p="2rem"
         m="2rem auto"
         borderRadius="1.5rem"

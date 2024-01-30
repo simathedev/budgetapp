@@ -28,7 +28,14 @@ const SavingsWidget=()=>{
    
    const getTotalSavings=async()=>{
     try{
-      const response = await fetch(`https://budget-app-api-ecru.vercel.app/savings/getSavingsTotal/${userId}`, {
+      const apiUrl=process.env.NODE_ENV === 'production' ?
+      `https://budget-app-api-ecru.vercel.app/savings/getSavingsTotal/${userId}`
+      :
+      `http://localhost:3001/savings/getSavingsTotal/${userId}`
+
+      const response = await fetch(
+        //`https://budget-app-api-ecru.vercel.app/savings/getSavingsTotal/${userId}`
+        apiUrl, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${token}`,

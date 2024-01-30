@@ -4,9 +4,11 @@ import {Box,Typography,useTheme,useMediaQuery} from "@mui/material";
 
 const LoginPage=()=>{
     const theme=useTheme();
-    const isNonMobileScreens=useMediaQuery("(min-width:100px)");
+    const isNonMobileScreens=useMediaQuery("(min-width:600px)");
     return(
-        <Box>
+        <Box 
+        sx={{pb:"3rem",display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}
+        >
             <Box
             width="100%"
            textAlign="center"
@@ -23,9 +25,10 @@ const LoginPage=()=>{
             </Box>
 
             <Box
-            width={isNonMobileScreens?"50%":"93%"}
+            width={isNonMobileScreens?"60%":"80%"}
+            //maxWidth="600px"
             p="2rem"
-            m="2rem auto"
+            m="1rem auto"
             borderRadius="1.5rem"
             backgroundColor={theme.palette.background.alt}
 

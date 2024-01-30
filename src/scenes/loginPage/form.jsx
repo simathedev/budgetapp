@@ -66,10 +66,14 @@ const Form=()=>{
         ...values,
         currency: selectedCurrency, // Get the currency from the Redux store
       };
-    
+      const apiUrl=process.env.NODE_ENV === 'production' ?
+      "https://budget-app-api-ecru.vercel.app/auth/register"
+      :
+      "http://localhost:3001/auth/register"
+
       const savedUserResponse=await fetch(
-        "https://budget-app-api-ecru.vercel.app/auth/register",
-        {
+        //"https://budget-app-api-ecru.vercel.app/auth/register"
+        apiUrl,{
           method:"POST",
           headers: {
             "Content-Type": "application/json", // Set the content type to JSON
@@ -85,9 +89,14 @@ const Form=()=>{
     }
 
     const login=async(values,onSubmitProps)=>{
+      const apiUrl=process.env.NODE_ENV === 'production' ?
+      "https://budget-app-api-ecru.vercel.app/auth/login"
+      :
+      "http://localhost:3001/auth/login"
+
       const loggedInResponse=await fetch(
-        "https://budget-app-api-ecru.vercel.app/auth/login",
-        {
+        //"https://budget-app-api-ecru.vercel.app/auth/login"
+        apiUrl,{
           method:"POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),

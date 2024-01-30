@@ -49,7 +49,10 @@ import CreditsWidget from "../../components/Credits";
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   const fullName = `${capitalizeFirstLetter(user.firstName)} ${capitalizeFirstLetter(user.lastName)}`;
-
+  const handleLogout = () => {
+   // dispatch(setLogout());
+    navigate("/");
+  };
     return(
       <>
         <FlexBetween padding="1rem 6%">
@@ -180,7 +183,7 @@ import CreditsWidget from "../../components/Credits";
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
+                <MenuItem onClick={handleLogout}>
                   Log Out
                 </MenuItem>
               </Select>

@@ -18,7 +18,13 @@ const GoalWidget=()=>{
     const main=palette.neutral.main;
 
    const getGoalCount=async()=>{
-  const response = await fetch(`https://budget-app-api-ecru.vercel.app/goals/getGoalsCount/${userId}`, {
+      const apiUrl=process.env.NODE_ENV === 'production' ?
+      `https://budget-app-api-ecru.vercel.app/goals/getGoalsCount/${userId}`
+      :
+      `http://localhost:3001/goals/getGoalsCount/${userId}`
+  const response = await fetch(
+   //`https://budget-app-api-ecru.vercel.app/goals/getGoalsCount/${userId}`
+  apiUrl, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${token}`,

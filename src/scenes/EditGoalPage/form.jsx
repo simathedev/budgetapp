@@ -71,7 +71,13 @@ const Form=()=>{
 
     const getGoals=async(id)=>{
 console.log("id:",id)
-        const response = await fetch(`https://budget-app-api-ecru.vercel.app/goals/getGoal/${id}`, {
+const apiUrl=process.env.NODE_ENV === 'production' ?
+`https://budget-app-api-ecru.vercel.app/goals/getGoal/${id}`
+:
+`http://localhost:3001/goals/getGoal/${id}`
+        const response = await fetch(
+          //`https://budget-app-api-ecru.vercel.app/goals/getGoal/${id}`
+          apiUrl, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -105,9 +111,14 @@ console.log("id:",id)
 
  const updateGoal=async(values,onSubmitProps)=>{
         try{
+          const apiUrl=process.env.NODE_ENV === 'production' ?
+          `https://budget-app-api-ecru.vercel.app/goals/updateGoal/${id}`
+          :`http://localhost:3001/goals/updateGoal/${id}`
+
             const goalResponse=await fetch(
-                //CHECK THE URL AND FIX
-              `https://budget-app-api-ecru.vercel.app/goals/updateGoal/${id}`,
+                
+              //`https://budget-app-api-ecru.vercel.app/goals/updateGoal/${id}`
+              apiUrl,
                 {
                   method:"PUT",
                   headers: {

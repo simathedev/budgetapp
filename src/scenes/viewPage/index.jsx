@@ -34,7 +34,8 @@ import BackButton from '../../components/BackButton';
 
 
 const ViewPage=()=>{
-    const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+    const isNonMobileScreens = useMediaQuery("(min-width:600px)");
+    //const isNonMobile = useMediaQuery("(min-width:600px)");
     const dispatch = useDispatch();
     const navigate = useNavigate();
     let {pageType}=useParams();
@@ -65,26 +66,30 @@ const ViewPage=()=>{
 
     const getData = async (pageType) => {
         let fetchOptions = {};
-    
+        const apiUrl=process.env.NODE_ENV === 'production' ?
+        `https://budget-app-api-ecru.vercel.app`
+        :
+        `http://localhost:3001`
+
         switch (pageType) {
             case 'expenses':
                 fetchOptions = {
-                    fetchURL: `https://budget-app-api-ecru.vercel.app/expenses/getExpenses/${userId}`,
+                    fetchURL: `${apiUrl}/expenses/getExpenses/${userId}`,
                 };
                 break;
             case 'savings':
                 fetchOptions = {
-                    fetchURL: `https://budget-app-api-ecru.vercel.app/savings/getSavings/${userId}`,
+                    fetchURL: `${apiUrl}/savings/getSavings/${userId}`,
                 };
                 break;
             case 'goals':
                 fetchOptions = {
-                    fetchURL: `https://budget-app-api-ecru.vercel.app/goals/getGoals/${userId}`,
+                    fetchURL: `${apiUrl}/goals/getGoals/${userId}`,
                 };
                 break;
             case 'transactions':
                 fetchOptions = {
-                    fetchURL: `https://budget-app-api-ecru.vercel.app/balance/getBalance/${userId}`,
+                    fetchURL: `${apiUrl}/balance/getBalance/${userId}`,
                 };
                 break;
             default:
@@ -115,16 +120,19 @@ const ViewPage=()=>{
     };
     const getGroupedCategories = async (pageType) => {
         let fetchOptions = {};
-    
+        const apiUrl=process.env.NODE_ENV === 'production' ?
+        `https://budget-app-api-ecru.vercel.app`
+        :
+        `http://localhost:3001`
         switch (pageType) {
             case 'expenses':
                 fetchOptions = {
-                    fetchURL: `https://budget-app-api-ecru.vercel.app/expenses/groupExpenses/${userId}`,
+                    fetchURL: `${apiUrl}/expenses/groupExpenses/${userId}`,
                 };
                 break;
             case 'savings':
                 fetchOptions = {
-                    fetchURL: `https://budget-app-api-ecru.vercel.app/savings/groupSavings/${userId}`,
+                    fetchURL: `${apiUrl}/savings/groupSavings/${userId}`,
                 };
             default:
                 break;
@@ -159,39 +167,46 @@ const ViewPage=()=>{
 
     
     const handleDelete = async (pageType,responseData,itemId) => {
+        const apiUrl=process.env.NODE_ENV === 'production' ?
+            `https://budget-app-api-ecru.vercel.app`
+            :
+            `http://localhost:3001`
         if (deleteItemId) {
             const id=deleteItemId
-          
           let fetchOptions = {};
             console.log("page type:",pageType)
           switch (pageType) {
               case 'expenses':
                   fetchOptions = {
-                      fetchURL: `https://budget-app-api-ecru.vercel.app/expenses/deleteExpense/${id}`,
+                      fetchURL: `${apiUrl}/expenses/deleteExpense/${id}`,
                   };
                   break;
               case 'savings':
                   fetchOptions = {
-                      fetchURL: `https://budget-app-api-ecru.vercel.app/savings/deleteSaving/${id}`,
+                      fetchURL: `${apiUrl}/savings/deleteSaving/${id}`,
                   };
                   break;
               case 'goals':
                   fetchOptions = {
-                      fetchURL: `https://budget-app-api-ecru.vercel.app/goals/deleteGoal/${id}`,
+                      fetchURL: `${apiUrl}/goals/deleteGoal/${id}`,
                   };
                   break;
                   case 'transactions':
                     const selectedItem = responseData.find(item => item._id === deleteItemId);
                     console.log("type: ",selectedItem.type);
+                   /* const apiUrl=process.env.NODE_ENV === 'production' ?
+                    `https://budget-app-api-ecru.vercel.app`
+                    :
+                    `http://localhost:3001`*/
                     if (selectedItem){
                         if (selectedItem.type === 'expense') {
                             fetchOptions = {
-                                fetchURL: `https://budget-app-api-ecru.vercel.app/expenses/deleteExpense/${id}`,
+                                fetchURL: `${apiUrl}/expenses/deleteExpense/${id}`,
                                
                             };
                         } else {
                             fetchOptions = {
-                                fetchURL: `https://budget-app-api-ecru.vercel.app/savings/deleteSaving/${id}`,
+                                fetchURL: `${apiUrl}/savings/deleteSaving/${id}`,
                                
                             };
                     }
@@ -266,19 +281,22 @@ return(
     </Typography>
     <Link to='/home'>
 
-    <BackButton/>
+    <BackButton sx={{
+        margin:'0rem 3rem',
+        border:'1px solid red',
+    }}/>
    
     </Link>
      {isGoal?(
 <>
-<Box padding="0rem 3rem">
+<Box padding={isNonMobileScreens?"0rem 3rem":"0rem 1rem"}>
     <TableContainer>
         <Table>
             <TableBody>
             <TableRow>
                    
                    {pageType !== 'transactions' && (
-                       <Link to={`/add/${pageType}`}>
+                       <Link to={pageType!='goals'?`/add/${pageType}`:`/add/goal`}>
                         <AddButton/>
                         </Link>
                        )}
@@ -317,14 +335,37 @@ return(
                     </TableRow>
                 ) : (
                     responseData.map((data) => (
-                        <TableRow key={data._id}>
-                            <TableCell style={{ width: '40%' }}>
+                        <TableRow key={data._id} style={{
+                            display:!isNonMobileScreens&&'flex',
+                        flexDirection:!isNonMobileScreens&&'column',
+                        border:!isNonMobileScreens&&`2px solid ${palette.background.alt}`,
+                        borderRadius:!isNonMobileScreens&&'20px',
+                        margin:!isNonMobileScreens&&'1rem 0rem',
+                        backgroundColor:!isNonMobileScreens&&`${palette.background.alt}`,
+                        boxShadow:!isNonMobileScreens&&'0px 4px 8px rgba(0, 0, 0, 0.1)'
+                        }}>
+                            <TableCell style={{ width:{xs:'20%',sm:'40%' }}}>
                                 <div>
-                                    <div><h2>{data.name} </h2></div>
-                                    <div>{data.targetDate}</div>
+                                    <Typography
+                                    variant="body2" 
+                                    sx={{
+                                        fontSize:{xs:'14px',sm:'16px'}, 
+                                        fontWeight: 700,
+                                        color:palette.primary.main
+                                      }}
+                                    >{data.name} 
+                                    </Typography>
+                                     <Typography 
+                                     variant="body2" 
+                                    sx={{
+                                        fontSize:{xs:'12px',sm:'14px'}, 
+                                      }}
+                                    >
+                                        {data.targetDate}
+                                    </Typography>
                                 </div>
                             </TableCell>
-                            <TableCell style={{ textAlign: 'center' }}>
+                            <TableCell style={{ textAlign: 'center'}}>
                                 <div>{selectedCurrSymbol} {parseFloat(data.currentBalance*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 2, })} / {selectedCurrSymbol} {parseFloat(data.targetAmount*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 1, })}</div>
                                 <div><LinearProgress
                                     variant="determinate"
@@ -332,7 +373,7 @@ return(
                                 />
                                 </div>
                             </TableCell>
-                            <TableCell style={{ alignItems: 'right' }}>
+                            <TableCell style={{ alignItems: 'right'}}>
                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                                     <Button variant="outlined" 
                                       onClick={() => {
@@ -424,17 +465,48 @@ return(
                 ) : (
                         
                 responseData.map((data) => (
-                    <TableRow key={data._id}>
-                        <TableCell style={{ width: isTransaction ? '20%' : '40%',paddingLeft:isTransaction?'4rem':'2rem'}}>
+                    <TableRow key={data._id}
+                    style={{
+                        display:!isNonMobileScreens&&'flex',
+                    flexDirection:!isNonMobileScreens&&'column',
+                    border:!isNonMobileScreens&&`2px solid ${palette.background.alt}`,
+                    borderRadius:!isNonMobileScreens&&'20px',
+                    margin:!isNonMobileScreens&&'1rem 0rem',
+                    backgroundColor:!isNonMobileScreens&&`${palette.background.alt}`,
+                    boxShadow:!isNonMobileScreens&&'0px 4px 8px rgba(0, 0, 0, 0.1)',
+                    paddingBottom:'1rem'
+                    }}
+                    >
+                        <TableCell style={{ width: isTransaction ? '50%' : '40%',paddingLeft:isTransaction?'2rem':'1rem', paddingLeft:isNonMobileScreens?'2rem':'1rem'}}>
                             <div>
-                                <div><h2>{data.description} </h2>
-                               <h4>{data.category}</h4>
-                                </div>
-                                <div>{data.date}</div>
-                                
+                                <Typography
+                                  variant="body2" 
+                                  sx={{
+                                    color:palette.primary.main,
+                                      fontSize:{xs:'14px',sm:'16px'}, 
+                                      fontWeight: 700,
+                                    }}
+                                >{data.description} 
+                                </Typography>
+                               <Typography
+                                variant="body2" 
+                                sx={{
+                                    fontSize:{xs:'12px',sm:'14px'},
+                                    fontWeight:500, 
+                                  }}
+                               >
+                                {data.category}</Typography>
+                               
+                                <Typography
+                                 variant="body2" 
+                                 sx={{
+                                     fontSize:{xs:'12px',sm:'14px'}, 
+                                   }}
+                                >
+                                    {data.date}</Typography> 
                             </div>
                         </TableCell >
-                        <TableCell style={{ textAlign: 'center' }}>{data.type==='expense'?'-':'+'} {selectedCurrSymbol} {parseFloat(data.amount*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 2, })}</TableCell>
+                        <TableCell style={{ textAlign:{xs:'left',sm:'center'},paddingLeft:{xs:'2rem',sm:'0rem'} }}>{data.type==='expense'?'-':'+'} {selectedCurrSymbol} {parseFloat(data.amount*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 2, })}</TableCell>
 
                         {pageType !== 'transactions' && (
                         <TableCell style={{ alignItems: 'right' }}>

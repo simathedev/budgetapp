@@ -13,7 +13,7 @@ const EditPage=()=>{
     const isExpense = pageType === "expenses";
     const isSaving = pageType === "savings";
     const theme=useTheme();
-    const isNonMobileScreens=useMediaQuery("(min-width:100px)");
+    const isNonMobileScreens=useMediaQuery("(min-width:600px)");
 
     return(
        <Box>
@@ -22,7 +22,7 @@ const EditPage=()=>{
         <BackButton/>
         </Link>
         <Box
-            width={isNonMobileScreens?"70%":"93%"}
+            width={isNonMobileScreens?"70%":"85%"}
             p="2rem"
             m="2rem auto"
             borderRadius="1.5rem"

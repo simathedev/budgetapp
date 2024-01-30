@@ -25,9 +25,15 @@ const AddAmount = ({ currentAmount, onClose, goalId }) => {
     //console.log("id:",id)
     const parsedAmount = parseFloat(amountToAdd)+parseFloat(currentAmount);
     console.log('amount to add in goal:', parsedAmount);
+    const apiUrl=process.env.NODE_ENV === 'production' ?
+    `https://budget-app-api-ecru.vercel.app/goals/addGoalAmount/${goalId}`
+    :
+    `http://localhost:3001/goals/addGoalAmount/${goalId}`
     if (!isNaN(parsedAmount) && parsedAmount >= 0) {
       try {
-        const response = await fetch(`https://budget-app-api-ecru.vercel.app/goals/addGoalAmount/${goalId}`, {
+        const response = await fetch(
+          //`https://budget-app-api-ecru.vercel.app/goals/addGoalAmount/${goalId}`
+          apiUrl, {
           method:"PUT",
                   headers: {
                     Authorization: `Bearer ${token}`,
@@ -57,7 +63,7 @@ const AddAmount = ({ currentAmount, onClose, goalId }) => {
 
   return (
     <Grid container justifyContent="center" >
-      <Grid item xs={4} md={4} sx={{ zIndex:1000,backgroundColor: 'white',boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', borderRadius:'10px'}}>
+      <Grid item xs={10} sm={8} md={4} sx={{ zIndex:1000,backgroundColor: 'white',boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', borderRadius:'10px'}}>
         <Box px={6} py={3}>
           <Typography variant="h6" gutterBottom>
             Add Amount

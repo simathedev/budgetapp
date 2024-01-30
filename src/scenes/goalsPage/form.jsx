@@ -44,8 +44,14 @@ const Form=()=>
    
     const goal=async(values,onSubmitProps)=>{
         try {
+          const apiUrl=process.env.NODE_ENV === 'production' ?
+          `https://budget-app-api-ecru.vercel.app/goals/addGoal`
+          :
+          `http://localhost:3001/goals/addGoal`
+
         const goalResponse=await fetch(
-          `https://budget-app-api-ecru.vercel.app/goals/addGoal`,
+          //`https://budget-app-api-ecru.vercel.app/goals/addGoal`
+          apiUrl,
           {
             method:"POST",
             headers: {

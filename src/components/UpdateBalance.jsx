@@ -2,9 +2,13 @@
 const UpdateBalance = async (currentBalance, token, userId) => {
   try {
     const values={balance: currentBalance} 
+    const apiUrl=process.env.NODE_ENV === 'production' ?
+    `https://budget-app-api-ecru.vercel.app/balance/updateBalance/${userId}`
+    :
+    `http://localhost:3001/balance/updateBalance/${userId}`
     const balanceResponse = await fetch(
-      `https://budget-app-api-ecru.vercel.app/balance/updateBalance/${userId}`,
-      {
+      `https://budget-app-api-ecru.vercel.app/balance/updateBalance/${userId}`
+      ,{
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -79,24 +79,17 @@ import UpdateBalance from "../../components/UpdateBalance";
       pageVariable="saving"
     }
     const [open, setOpen] = useState(false);
-
-    /*const updateBalance=async()=>{
-      const balanceResponse=await fetch(
-        `https://budget-app-api-ecru.vercel.app/balance/updateBalance/${user._id}`,
-        {
-          method:"POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-           },
-        }
-      )
-    }*/
     
     
     const getCategories=async()=>{
+      const apiUrl=process.env.NODE_ENV === 'production' ?
+      `https://budget-app-api-ecru.vercel.app/categories`:
+      `http://localhost:3001/categories`
+
         const categoryResponse=await fetch(
-            `https://budget-app-api-ecru.vercel.app/categories`,{
+            //`https://budget-app-api-ecru.vercel.app/categories`
+            apiUrl
+            ,{
                 method:"GET",
                 headers: { Authorization: `Bearer ${token}` },
 
@@ -113,10 +106,14 @@ import UpdateBalance from "../../components/UpdateBalance";
 
     const expense=async(values,onSubmitProps)=>{
         try{
+          const apiUrl=process.env.NODE_ENV === 'production' ?
+          `https://budget-app-api-ecru.vercel.app/expenses/addExpense`
+          :
+          `http://localhost:3001/expenses/addExpense`
             const expenseResponse=await fetch(
                 //CHECK THE URL AND FIX
-              `httpsbudget-app-api-ecru.vercel.app/expenses/addExpense`,
-                {
+             // `https://budget-app-api-ecru.vercel.app/expenses/addExpense`
+             apiUrl,{
                   method:"POST",
                   headers: {
                     Authorization: `Bearer ${token}`,
@@ -148,9 +145,14 @@ import UpdateBalance from "../../components/UpdateBalance";
 
     const saving=async(values,onSubmitProps)=>{
        try{
+        const apiUrl=process.env.NODE_ENV === 'production' ?
+        `https://budget-app-api-ecru.vercel.app/savings/addSaving`
+        :
+        `http://localhost:3001/savings/addSaving`
         const savingResponse=await fetch(
-          //CHECK THE URL AND FIX
-          `https://budget-app-api-ecru.vercel.app/savings/addSaving`,
+        
+          //`https://budget-app-api-ecru.vercel.app/savings/addSaving`
+          apiUrl,
           {
             method:"POST",
             headers: {
@@ -317,7 +319,7 @@ import UpdateBalance from "../../components/UpdateBalance";
                 
                >
                {categories.map((category) => (
-        <Grid item xs={4} key={category._id} >
+        <Grid item xs={6} sm={6} md={4} key={category._id} >
           <Button
             variant="outlined"
             fullWidth
@@ -329,6 +331,9 @@ import UpdateBalance from "../../components/UpdateBalance";
                 setSelectedCategory(category.name)
               }} 
               sx={{
+                height: "52px",
+                fontSize:isNonMobile?'14px':'11px',
+          
                 backgroundColor:
                   selectedCategory === category.name ?` ${palette.primary.main}` : "transparent",
                   color: selectedCategory === category.name ?`${palette.background.alt}`:`${palette.primary.main}`,
