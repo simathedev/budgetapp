@@ -1,4 +1,4 @@
-import { Button,Typography,useTheme } from "@mui/material";
+import { Button,Typography,useTheme,Box } from "@mui/material";
 import WidgetWrapper from "../../components/WidgetWrapper";
 import { useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from 'react-redux';
@@ -43,8 +43,12 @@ const GoalWidget=()=>{
 
 return(
     <WidgetWrapper
+    display="flex"
+    flexDirection="column"
     alignItems="center"
     textAlign="center"
+    justifyContent="center"
+    minHeight="240px"
     >
          <Typography
              variant="h2"
@@ -68,13 +72,15 @@ return(
             >
             {responseData?`${responseData} goals`:'No goals set'}
             </Typography>
-
-            <Button  onClick={()=>navigate("/add/goal")}>
+              <Box sx={{display:'flex'}}>
+              <Button  onClick={()=>navigate("/add/goal")}>
              Add goals
              </Button>
              <Button  onClick={()=>navigate("/view/goals")}>
              View goals
              </Button>
+              </Box>
+          
              {/*
              set feature that only displays buttons when there are goals
              <Button>

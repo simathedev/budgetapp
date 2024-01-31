@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material"
+import { Box, Grid, useTheme, useMediaQuery } from "@mui/material"
 import Navbar from "../navbar"
 import BalanceWidget from "../widgets/BalanceWidget";
 import ExpenseWidget from "../widgets/ExpenseWidget";
@@ -7,10 +7,12 @@ import FlexBetween from "../../components/FlexBetween";
 import GoalWidget from "../widgets/GoalWidget";
 
 const HomePage=()=>{
+  const isNonMobileScreens = useMediaQuery("(min-width:600px)");
+
     return(
         <Box>
             <Navbar/>
-            <Box padding="2rem">
+            <Box padding={isNonMobileScreens?"2rem":"2rem 2rem 0rem 2rem"}>
             <BalanceWidget/>
             </Box>
             <Box padding="2rem">
@@ -22,7 +24,7 @@ const HomePage=()=>{
             <SavingsWidget />
           </Grid>
         </Grid>
-            <Box padding="4rem 0rem">
+            <Box padding={isNonMobileScreens?"4rem 0rem":"2rem 0rem 0rem 0rem"}>
                 <GoalWidget/>
             </Box>
             </Box>

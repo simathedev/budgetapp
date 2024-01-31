@@ -342,7 +342,8 @@ return(
                         borderRadius:!isNonMobileScreens&&'20px',
                         margin:!isNonMobileScreens&&'1rem 0rem',
                         backgroundColor:!isNonMobileScreens&&`${palette.background.alt}`,
-                        boxShadow:!isNonMobileScreens&&'0px 4px 8px rgba(0, 0, 0, 0.1)'
+                        boxShadow:!isNonMobileScreens&&'0px 4px 8px rgba(0, 0, 0, 0.1)',
+                        paddingBottom:'1rem'
                         }}>
                             <TableCell style={{ width:{xs:'20%',sm:'40%' }}}>
                                 <div>
