@@ -13,8 +13,8 @@ import GoalPage from './scenes/goalsPage';
 import EditGoalPage from './scenes/EditGoalPage';
 import EditPage from './scenes/EditPage';
 import DeleteItem from './components/DeleteItem';
+import SplashPage from './scenes/SplashScreenPage';
 import CalculateCurrency from './components/CalculateCurrency';
-import SplashPage from './scenes/loginPage/SplashScreen.jsx';
 function App() {
   const mode=useSelector ((state)=>state.mode);
   const theme=useMemo(()=>createTheme(themeSettings(mode)),[mode]);
