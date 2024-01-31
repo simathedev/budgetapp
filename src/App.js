@@ -14,7 +14,7 @@ import EditGoalPage from './scenes/EditGoalPage';
 import EditPage from './scenes/EditPage';
 import DeleteItem from './components/DeleteItem';
 import CalculateCurrency from './components/CalculateCurrency';
-import SplashPage from './scenes/loginPage/splashScreen';
+import SplashPage from './scenes/loginPage/SplashScreen.jsx';
 function App() {
   const mode=useSelector ((state)=>state.mode);
   const theme=useMemo(()=>createTheme(themeSettings(mode)),[mode]);
@@ -24,9 +24,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline/>
    <Routes>
-    <Route path="/" element={<LoginPage/>}/>
+   <Route path="/" element={<SplashPage/>}/>
+    <Route path="/signIn" element={<LoginPage/>}/>
     <Route path="/home" element={<HomePage/>}/>
-    <Route path="/splash" element={<splashPage/>}/>
     <Route path="/add/:pageType?" element={<AddExpenseSavingPage/>}/>
     <Route path="/view/:pageType?" element={<ViewPage/>}/>
     <Route path="/edit/:pageType?/:id" element={<EditPage/>}/>

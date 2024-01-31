@@ -51,7 +51,7 @@ import CreditsWidget from "../../components/Credits";
   const fullName = `${capitalizeFirstLetter(user.firstName)} ${capitalizeFirstLetter(user.lastName)}`;
   const handleLogout = () => {
    // dispatch(setLogout());
-    navigate("/");
+    navigate("/signIn");
   };
     return(
       <>
@@ -105,7 +105,7 @@ import CreditsWidget from "../../components/Credits";
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </Select>
           </FormControl>
 
