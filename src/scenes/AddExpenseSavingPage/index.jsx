@@ -18,7 +18,7 @@ const AddExpenseSavingPage=()=>{
 return(
     <Box>
         <Navbar/>
-        <Link to={`/view/goals`}>
+        <Link to={`/view/${pageType}`}>
         <BackButton/>
         </Link>
         <Box
