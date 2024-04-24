@@ -9,6 +9,7 @@ import {
   IconButton,
   Collapse,
   Alert,
+  Card,
   useTheme,
   } from "@mui/material";
   import { Formik } from "formik";
@@ -19,6 +20,9 @@ import { useDispatch,useSelector } from "react-redux";
 import { setBalance } from "../../state";
 import FlexBetween from "../../components/FlexBetween";
 import { Label } from "@mui/icons-material"; 
+import { toast } from 'react-toastify'; 
+import LoadingWidget from "../widgets/LoadingWidget";
+import ProgressLoadWidget from "../widgets/ProgressLoadWidget";
 
 
 
@@ -41,6 +45,8 @@ const Form=()=>{
     const [categories,setCategories]=useState([]);
     const [selectedCategory,setSelectedCategory]=useState("");
     const [responseData,setResponseData]=useState([]);
+    const [isLoading,setIsLoading]=useState(true);
+    const [savingData,setSavingData]=useState(false);
    //change to get page
     let {pageType,id}=useParams();
     console.log("edit page + pageType editpage: ",pageType);
@@ -125,12 +131,15 @@ const Form=()=>{
                 "Content-Type": "application/json",
             },
         });
-        const data = await response.json();
-        setResponseData(data.data);
-        console.log(data.data.description);
-        console.log("response data from update Page: ",data.data);
-
-
+        if(response.ok)
+        {
+          const data = await response.json();
+          setResponseData(data.data);
+          console.log(data.data.description);
+          console.log("response data from update Page: ",data.data);  
+          setIsLoading(false);
+        }
+      
       
     }
 }
@@ -197,18 +206,39 @@ const Form=()=>{
                  body:JSON.stringify(values),
                 });
                 if (expenseResponse.ok){
-               
+               setSavingData(false);
                //Just change to the amount updated
              const updateBalance=parseFloat(balance)- parseFloat(values.amount);
               console.log("updated balance:", updateBalance);
               dispatch(setBalance({balance:updateBalance}));
-                  
+              toast.success('Expense Successfully Update.', { 
+                // Position of the notification
+                autoClose: 5000, // Duration before the notification automatically closes (in milliseconds)
+                hideProgressBar: true, // Whether to hide the progress bar
+                closeOnClick: true, // Whether clicking the notification closes it
+                pauseOnHover: true, // Whether hovering over the notification pauses the autoClose timer
+                draggable: true, // Whether the notification can be dragged
+                progress: undefined, // Custom progress bar (can be a React element)
+                theme: "colored",
+                // Other options for customizing the notification
+              });
                   navigate("/view/expenses");
                 ;
                   onSubmitProps.resetForm(); 
                 }
                 else{
+                  setSavingData(false);
                   console.log("failed to submit the expense form");
+                  toast.error('Expense Creation Unsuccessful', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    });
                 }
              
         }
@@ -239,19 +269,39 @@ const Form=()=>{
            });
          if (savingResponse.ok)
          {
-                   
-               
+                   setSavingData(false);
                  const updateBalance=parseFloat(balance)+ parseFloat(values.amount);
                  console.log("updated balance:", updateBalance);
                  dispatch(setBalance({balance:updateBalance}));
-           
+                 toast.success('Saving Successfully Updated.', { 
+                  // Position of the notification
+                  autoClose: 5000, // Duration before the notification automatically closes (in milliseconds)
+                  hideProgressBar: true, // Whether to hide the progress bar
+                  closeOnClick: true, // Whether clicking the notification closes it
+                  pauseOnHover: true, // Whether hovering over the notification pauses the autoClose timer
+                  draggable: true, // Whether the notification can be dragged
+                  progress: undefined, // Custom progress bar (can be a React element)
+                  theme: "colored",
+                  // Other options for customizing the notification
+                });
            onSubmitProps.resetForm();
            navigate("/view/savings");
  
          }
          else{
+          setSavingData(false);
            console.log("failed to submit the savings form");
-         }
+           toast.error('Savings Creation Unsuccessful', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            });
+          }
         }
         catch(err){
          console.log("Error saving savings:",err);
@@ -262,14 +312,17 @@ const Form=()=>{
     
      const handleFormSubmit=async(values, onSubmitProps)=>{
         try{
+          
           if (isExpense)
           {
+            setSavingData(true);
             values={...values,user:userId}   
            await updateExpense (values, onSubmitProps);
             console.log("submitting update expense values: ", values);
           }
           if (isSaving)
           {
+            setSavingData(true);
             values={...values,user:userId}   
           await updateSaving(values, onSubmitProps); 
             console.log("submitting update saving values: ", values);
@@ -280,7 +333,10 @@ const Form=()=>{
           console.err("Error submitting form:", err);
         } 
         }
-
+if (isLoading)
+{
+  return <LoadingWidget/>
+}
 return(
 
 <Formik
@@ -301,35 +357,35 @@ return(
         resetForm,
       }) => (
         <form onSubmit={handleSubmit}>
-<Box sx={{ width: '100%' }}>
-<Collapse in={open}>
-<Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setOpen(false);
-              }}
-            >
-              <Close fontSize="inherit" />
-            </IconButton>
-          }
-          sx={{ mb: 2 }}
-        >
-          {pageVariable} has been successfully created!
-        </Alert>
-</Collapse>
-</Box>
 <Box
             display="grid"
+            position="relative"
             gap="30px"
             gridTemplateColumns="repeat(4, minmax(0, 1fr))"
             sx={{
               "& > div": { gridColumn: isNonMobile ? undefined : "span 5" },
             }}
           >
+               {savingData&&(
+                        <Card
+                        sx={{width:isNonMobile?'60%':'90%', 
+           position: 'absolute',
+            top: isNonMobile?'50%':'50%',
+            left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex:9999,
+          borderRadius:4,
+        }}
+                        >
+            {isSaving?(
+        <ProgressLoadWidget text={"Updating"} name={"Saving"}/>
+
+            ):(
+        <ProgressLoadWidget text={"Updating"} name={"Expense"}/>
+
+            )}
+                        </Card>
+                      )}
             <>
             <TextField
                   label="Description"

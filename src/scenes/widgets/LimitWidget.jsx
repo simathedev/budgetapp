@@ -1,5 +1,8 @@
 import { Button,Typography,useTheme,Box } from "@mui/material";
 import WidgetWrapper from "../../components/WidgetWrapper";
+import { useDispatch,useSelector } from "react-redux";
+import {setBalance} from "../../state";
+
 
 const LimitWidget=()=>{
 

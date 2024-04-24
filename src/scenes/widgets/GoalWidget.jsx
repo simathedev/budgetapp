@@ -3,11 +3,13 @@ import WidgetWrapper from "../../components/WidgetWrapper";
 import { useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from 'react-redux';
 import { useEffect,useState } from "react";
+import LoadingSmallWidget from "./LoadingSmallWidget";
 
 const GoalWidget=()=>{
    const dispatch = useDispatch();
    const navigate = useNavigate();
    const [responseData,setResponseData]=useState([]);
+   const [isLoading,setIsLoading]=useState(true);
    const selectedCurrSymbol = useSelector((state) => state.selectedCurrSymbol);
     const{palette}=useTheme();
      const user = useSelector((state) => state.user);
@@ -31,15 +33,28 @@ const GoalWidget=()=>{
             "Content-Type": "application/json",
         },
     });
-    const data=await response.json();
-    setResponseData(data.totalCount);
-   // console.log("response goal data: ",data.totalCount);
-    const goalCount=data.totalCount;
+    if (response.ok)
+    {
+      const data=await response.json();
+      setResponseData(data.totalCount);
+      const goalCount=data.totalCount;
+      setIsLoading(false);
+    }
+   
    }   
  
    useEffect(()=>{
       getGoalCount();
    },[]);
+
+   if (isLoading)
+{
+  return(
+<WidgetWrapper >
+    <LoadingSmallWidget text={'loading...'} name={'Goals'} height={'240px'}/>
+</WidgetWrapper>
+  ) 
+}
 
 return(
     <WidgetWrapper

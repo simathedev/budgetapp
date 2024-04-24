@@ -10,12 +10,17 @@ import {
     Alert,
     AlertTitle,
     useTheme,
+    Card,
   } from "@mui/material";
   import {Close } from '@mui/icons-material';
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
+import { toast } from 'react-toastify';
+import ProgressLoadWidget from "../widgets/ProgressLoadWidget";
+import FlexBetween from "../../components/FlexBetween";
+
 
 const goalSchema = yup.object().shape({
     name: yup.string().required("goal title is required"),
@@ -41,6 +46,7 @@ const Form=()=>
     const userId=`${user._id}`
    const token = useSelector((state) => state.token);
    const [open, setOpen] = useState(false);
+   const [saving,setSaving]=useState(false);
    
     const goal=async(values,onSubmitProps)=>{
         try {
@@ -62,16 +68,35 @@ const Form=()=>
           }
         )
         if(goalResponse.ok){
-            setOpen(true)
+            setSaving(false);
             onSubmitProps.resetForm();
+            toast.success('Goal Successfully Created.', { 
+              autoClose: 5000, 
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+           
             navigate("/view/goals");
         }
-        //if (goalData)
-        else{
-            console.log("failed to submit the goal form");
-        }
 
-            // ...rest of the code
+        else{
+          setSaving(false);
+            console.log("failed to submit the goal form");
+            toast.error('Goal Creation Unsuccessful', {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+              });
+          }
           } 
           catch (error) {
             console.error("Error in goal function:", error);
@@ -81,13 +106,12 @@ const Form=()=>
 
 
       const handleFormSubmit = async (values, onSubmitProps) => {
-        //console.log("Form values:", values); // Add this line to log the values object
         try {
+          setSaving(true);
            values={...values,user:userId}      
-            //console.log("Form submitted!");
-
           await goal(values, onSubmitProps);
           console.log("submitting goal values: ", values);
+         
         } catch (error) {
           console.error("Error submitting form:", error);
         }
@@ -111,40 +135,30 @@ const Form=()=>
                     resetForm,
                 })=>(
                     <form onSubmit={handleSubmit}>
-
-
-  
-
-
-    <Box sx={{ width: '100%' }}>
-      <Collapse in={open}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setOpen(false);
-              }}
-            >
-              <Close fontSize="inherit" />
-            </IconButton>
-          }
-          sx={{ mb: 2 }}
-        >
-          Goal has been successfully created
-        </Alert>
-      </Collapse>
-    </Box>
- 
                       <Box
+                      position="relative"
                       display="grid"
                       gap="30px"
                       gridTemplateColumns="repeat(4, minmax(0, 1fr))"
                       sx={{
                         "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                       }}>
+                       
+                      {saving&&(
+                        <Card
+                        sx={{width:isNonMobile?'60%':'90%', 
+           position: 'absolute',
+            top: '50%',
+            left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex:9999,
+          borderRadius:4,
+        }}
+                        >
+                      <ProgressLoadWidget text={"Saving"} name={"Goal"}/>
+                        </Card>
+                      )}
+                       
                       <TextField
                       label="Goal Title"
                       onBlur={handleBlur}

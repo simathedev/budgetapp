@@ -31,6 +31,8 @@ import TopCategoryWidget from "../widgets/TopCategoryWidget";
 import AddAmount from "../../components/AddGoalAmount";
 import AddButton from '../../components/AddButton';
 import BackButton from '../../components/BackButton';
+import LoadingWidget from "../widgets/LoadingWidget";
+import ProgressLoadWidget from "../widgets/ProgressLoadWidget";
 
 
 const ViewPage=()=>{
@@ -40,14 +42,17 @@ const ViewPage=()=>{
     const navigate = useNavigate();
     let {pageType}=useParams();
     //const [pageType, setPageType] = useState("expenses");
+  
     const [responseData,setResponseData]=useState([]);
     const [categoryData,setCategoryData]=useState([]);
     const [deleteItemId,setDeleteItemId]=useState(null)
     const [selectedGoalId,setSelectedGoalId]=useState(null);
     const[currentBalance,setCurrentBalance]=useState(null);
     const [openAddAmount,setOpenAddAmount]=useState(false);
-
+    //const [savingData,setSavingData]=useState(false);
+    const[isLoading,setIsLoading]=useState(true);
     const { palette } = useTheme();
+    const fontPrimary=palette.background.default;
     const user = useSelector((state) => state.user);
     const userId=`${user._id}`
    const token = useSelector((state) => state.token);
@@ -107,14 +112,23 @@ const ViewPage=()=>{
                 },
             });
     
-            const data = await response.json();
-            console.log("check data fetched: ",data)
-            console.log("data amount: ",data.amount);
-            console.log("selected exchange rate: ",selectedExchangeRate);
-            const finalAmount=parseFloat(data.amount*selectedExchangeRate).toFixed(2);
-            setResponseData(data.data);
-            console.log("final amount: ",finalAmount);
-            console.log("response data from view page: ", data);
+            if (response.ok)
+            {
+                const data = await response.json();
+                console.log("check data fetched: ",data)
+                console.log("data amount: ",data.amount);
+                console.log("selected exchange rate: ",selectedExchangeRate);
+                const finalAmount=parseFloat(data.amount*selectedExchangeRate).toFixed(2);
+                setResponseData(data.data);
+                console.log("final amount: ",finalAmount);
+                console.log("response data from view page: ", data);
+                setIsLoading(false);
+            }
+            else
+            {
+                console.log("failed to fetch data");
+            }
+           
             
         }
     };
@@ -236,6 +250,7 @@ const ViewPage=()=>{
         
             if (response.ok) {
                 // Delete was successful, update the responseData state
+                //setSavingData(false);
                if(selectedItem.type==='expense'){
                 const updateBalance=parseFloat(balance)+ parseFloat(deletedAmount);
                 await UpdateBalance(updateBalance,token,userId);
@@ -265,7 +280,10 @@ const ViewPage=()=>{
         }
       }
  
-
+if(isLoading)
+{
+    return <LoadingWidget/>
+}
 
 return(
     <Box>
@@ -297,7 +315,11 @@ return(
                    
                    {pageType !== 'transactions' && (
                        <Link to={pageType!='goals'?`/add/${pageType}`:`/add/goal`}>
-                        <AddButton/>
+                        <AddButton
+                         onClick={() => {
+                            navigate(pageType!='goals'?`/add/${pageType}`:`/add/goal`);
+                           }}
+                        />
                         </Link>
                        )}
                  
@@ -347,6 +369,7 @@ return(
                         border:!isNonMobileScreens&&'none'
                         }}>
                             <TableCell style={{ width:{xs:'20%',sm:'40%' }}}>
+                               
                                 <div>
                                     <Typography
                                     variant="body2" 
@@ -355,8 +378,12 @@ return(
                                         fontWeight: 700,
                                         color:palette.primary.main
                                       }}
+                                      onClick={() => {
+                                        navigate(`/viewDetails/goals/${data._id}`);
+                                       }}
                                     >{data.name} 
                                     </Typography>
+                                
                                      <Typography 
                                      variant="body2" 
                                     sx={{
@@ -366,6 +393,7 @@ return(
                                         {data.targetDate}
                                     </Typography>
                                 </div>
+                               
                             </TableCell>
                             <TableCell style={{ textAlign: 'center'}}>
                                 <div>{selectedCurrSymbol} {parseFloat(data.currentBalance*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 2, })} / {selectedCurrSymbol} {parseFloat(data.targetAmount*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 1, })}</div>
@@ -377,7 +405,8 @@ return(
                             </TableCell>
                             <TableCell style={{ alignItems: 'right'}}>
                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                    <Button variant="outlined" 
+                                    <Button variant="contained" 
+                                     sx={{ color: fontPrimary }}
                                       onClick={() => {
                                         navigate(`/edit/goal/${data._id}`);
                                        }}
@@ -428,9 +457,11 @@ return(
             <TableRow>
                    
                     {pageType !== 'transactions' && (
-                        <Link to={`/add/${pageType}`}>
-                         <AddButton/>
-                         </Link>
+                         <AddButton
+                         onClick={() => {
+                            navigate(`/add/${pageType}`);
+                           }}
+                         />
                         )}
                   
                    </TableRow>
@@ -479,7 +510,7 @@ return(
                     paddingBottom:'1rem'
                     }}
                     >
-                        <TableCell style={{ width: isTransaction ? '50%' : '40%',paddingLeft:isTransaction?'2rem':'1rem', paddingLeft:isNonMobileScreens?'2rem':'1rem'}}>
+                        <TableCell style={{ width: isTransaction ? isNonMobileScreens?'50%':'100%' : isNonMobileScreens?'40%':'100%', paddingLeft:isTransaction?'2rem':'1rem', paddingLeft:isNonMobileScreens?'2rem':'1rem'}}>
                             <div>
                                 <Typography
                                   variant="body2" 
@@ -488,6 +519,11 @@ return(
                                       fontSize:{xs:'14px',sm:'16px'}, 
                                       fontWeight: 700,
                                     }}
+                                    onClick={() => {
+                                        data.type==='expense'?
+                                    navigate(`/viewDetails/expenses/${data._id}`):
+                                    navigate(`/viewDetails/savings/${data._id}`);
+                                   }}
                                 >{data.description} 
                                 </Typography>
                                <Typography
@@ -515,7 +551,8 @@ return(
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
                           
                                 <>
-                                <Button variant="outlined"
+                                <Button variant="contained"
+                                 sx={{ color: fontPrimary }}
                                  onClick={() => {
                                     navigate(`/edit/${pageType}/${data._id}`);
                                    }}

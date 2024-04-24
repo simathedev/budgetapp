@@ -28,9 +28,10 @@ const EditGoalPage=()=>{
             backgroundColor={theme.palette.background.alt}
             >
         <Typography
-        sx={{mb:"1.5rem" }}
-        textAlign="center"
-        fontSize="24px"
+        sx={{mb:"1.5rem",
+        fontSize:{xs:"20px",sm:'24px'},
+        textAlign:"center"
+      }}
         >
            {"Edit Goal"}
         </Typography>  

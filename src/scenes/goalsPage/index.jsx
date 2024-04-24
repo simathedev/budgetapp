@@ -23,8 +23,11 @@ const isNonMobileScreens=useMediaQuery("(min-width:600px)");
 
         >
             <Typography
-            sx={{mb:"1.5rem" }}
-            textAlign="center"
+            sx={{mb:"1.5rem",
+            fontSize:{xs:"20px",sm:'24px'},
+            textAlign:"center"
+         }}
+           
             >
                 Add A Goal
             </Typography>

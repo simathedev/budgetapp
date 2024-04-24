@@ -14,6 +14,7 @@ const AddExpenseSavingPage=()=>{
     const isSaving = pageType === "savings";
     const theme=useTheme();
     const isNonMobileScreens=useMediaQuery("(min-width:600px)");
+  
 return(
     <Box>
         <Navbar/>
@@ -28,9 +29,12 @@ return(
             backgroundColor={theme.palette.background.alt}
             >
         <Typography
-        sx={{mb:"1.5rem" }}
-        textAlign="center"
-        fontSize="24px"
+        sx={{mb:"1.5rem",
+        fontSize:{xs:"20px",sm:'24px'},
+        textAlign:"center",
+    }}
+       
+        
         >
            {isExpense?"Add Expense":"Add Saving"}
         </Typography>  

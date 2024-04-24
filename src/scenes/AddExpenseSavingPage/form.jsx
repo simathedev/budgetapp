@@ -10,6 +10,7 @@ import {
     Collapse,
     Alert,
     useTheme,
+    Card,
   } from "@mui/material";
   import { Formik } from "formik";
   import {Close } from '@mui/icons-material';
@@ -20,7 +21,10 @@ import {
   import FlexBetween from "../../components/FlexBetween";
 import { Label } from "@mui/icons-material";
 import UpdateBalance from "../../components/UpdateBalance";
- 
+import { toast } from 'react-toastify'; 
+import LoadingWidget from "../widgets/LoadingWidget";
+import ProgressLoadWidget from "../widgets/ProgressLoadWidget";
+
 
   const expenseSchema = yup.object().shape({
     description: yup.string().required("description required"),
@@ -57,6 +61,8 @@ import UpdateBalance from "../../components/UpdateBalance";
     
    const [categories,setCategories]=useState([]);
    const [selectedCategory,setSelectedCategory]=useState("");
+   const [isLoading,setIsLoading]=useState(true);
+   const [savingData, setSavingData]=useState(false);
    let {pageType}=useParams();
     const { palette } = useTheme();
     const dispatch = useDispatch();
@@ -94,10 +100,14 @@ import UpdateBalance from "../../components/UpdateBalance";
                 headers: { Authorization: `Bearer ${token}` },
 
             })
-
-        const data=await categoryResponse.json();
-        setCategories(data);
-        console.log("categories:",data);
+            if (categoryResponse.ok)
+            {
+              const data=await categoryResponse.json();
+              setCategories(data);
+              console.log("categories:",data);
+              setIsLoading(false);
+            }
+   
     }
     useEffect(()=>{
             getCategories();
@@ -122,23 +132,46 @@ import UpdateBalance from "../../components/UpdateBalance";
                  body:JSON.stringify(values),
                 });
                 if (expenseResponse.ok){
+                  setSavingData(false)
                   const updateBalance=parseFloat(balance)- parseFloat(values.amount);
                   console.log("updated balance:", updateBalance);
                   await UpdateBalance(updateBalance,token,userId);
                   dispatch(setBalance({balance:updateBalance}));
                    //include exported function that updates balance in db
                   setOpen(true)
+                  toast.success('Expense Successfully Created.', { 
+                    // Position of the notification
+                    autoClose: 5000, // Duration before the notification automatically closes (in milliseconds)
+                    hideProgressBar: true, // Whether to hide the progress bar
+                    closeOnClick: true, // Whether clicking the notification closes it
+                    pauseOnHover: true, // Whether hovering over the notification pauses the autoClose timer
+                    draggable: true, // Whether the notification can be dragged
+                    progress: undefined, // Custom progress bar (can be a React element)
+                    theme: "colored",
+                    // Other options for customizing the notification
+                  });
                   navigate("/view/expenses");
                 ;
                   onSubmitProps.resetForm(); 
                 }
                 else{
+                  setSavingData(false);
                   console.log("failed to submit the expense form");
                 }
              
         }
         catch(err){
             console.log("Error saving expense:",err);
+            toast.error('Expense Creation Unsuccessful', {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+              });
         }
        
     }
@@ -163,19 +196,42 @@ import UpdateBalance from "../../components/UpdateBalance";
           });
         if (savingResponse.ok)
         {
+          setSavingData(false)
                   const updateBalance=parseFloat(balance)+ parseFloat(values.amount);
                   console.log("updated balance:", updateBalance);
                   await UpdateBalance(updateBalance,token,userId);
           //console.log("updated balance update response:", updateResponse);
           dispatch(setBalance({balance:updateBalance}));
           setOpen(true)
+          toast.success('Savings Successfully Created.', { 
+            // Position of the notification
+            autoClose: 5000, // Duration before the notification automatically closes (in milliseconds)
+            hideProgressBar: true, // Whether to hide the progress bar
+            closeOnClick: true, // Whether clicking the notification closes it
+            pauseOnHover: true, // Whether hovering over the notification pauses the autoClose timer
+            draggable: true, // Whether the notification can be dragged
+            progress: undefined, // Custom progress bar (can be a React element)
+            theme: "colored",
+            // Other options for customizing the notification
+          });
           //dispatch()
           onSubmitProps.resetForm();
           navigate("/view/savings");
 
         }
         else{
+          setSavingData(false)
           console.log("failed to submit the savings form");
+          toast.error('Savings Creation Unsuccessful', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            });
         }
        }
        catch(err){
@@ -190,6 +246,7 @@ import UpdateBalance from "../../components/UpdateBalance";
     }*/
     const handleFormSubmit=async(values, onSubmitProps)=>{
       try{
+        setSavingData(true)
         if (isExpense)
         {
           values={...values,user:userId}   
@@ -212,6 +269,12 @@ import UpdateBalance from "../../components/UpdateBalance";
         console.err("Error submitting form:", err);
       } 
       }
+
+      if (isLoading)
+      {
+        return <LoadingWidget/>
+      }
+
           return (
               <Formik
                 onSubmit={handleFormSubmit}
@@ -231,36 +294,36 @@ import UpdateBalance from "../../components/UpdateBalance";
         <form onSubmit={handleSubmit}>
 
           
-    <Box sx={{ width: '100%' }}>
-      <Collapse in={open}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setOpen(false);
-              }}
-            >
-              <Close fontSize="inherit" />
-            </IconButton>
-          }
-          sx={{ mb: 2 }}
-        >
-          {pageVariable} has been successfully created!
-        </Alert>
-      </Collapse>
-    </Box>
+    
           <Box
             display="grid"
+            position="relative"
             gap="30px"
             gridTemplateColumns="repeat(4, minmax(0, 1fr))"
             sx={{
               "& > div": { gridColumn: isNonMobile ? undefined : "span 5" },
             }}
           >
-          
+            {savingData&&(
+                        <Card
+                        sx={{width:isNonMobile?'60%':'90%', 
+           position: 'absolute',
+            top: '50%',
+            left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex:9999,
+          borderRadius:4,
+        }}
+                        >
+                        {isSaving?(
+                      <ProgressLoadWidget text={"Adding"} name={"Saving"}/>
+
+                        ):(
+                          <ProgressLoadWidget text={"Adding"} name={"Expense"}/>
+
+                        )}
+                        </Card>
+                      )}
               <>
                
                 <TextField

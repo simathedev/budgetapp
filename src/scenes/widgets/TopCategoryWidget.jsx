@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Box, Typography, Paper, useTheme, Grid, useMediaQuery, IconButton } from "@mui/material";
 import { useSelector,useDispatch } from "react-redux";
-//import {Square} from '@mui/icons-material';
 import {
   DirectionsBus,Category,
   Fastfood,Restaurant,Construction,
@@ -44,6 +43,7 @@ const TopCategoryWidget = ({ categoryData }) => {
        
       }}
     >
+   
       <Grid container spacing={2} display='flex' justifyContent="center" alignItems='center' width={isNonMobile?'80%':'100%'} sx={{width:{xs:'95%',sm:'60%'}}}>
         {Object.entries(categoryData).map(([category, total]) => (
          <Grid item key={category}  >

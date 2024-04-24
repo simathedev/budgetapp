@@ -14,8 +14,14 @@ import EditGoalPage from './scenes/EditGoalPage';
 import EditPage from './scenes/EditPage';
 import DeleteItem from './components/DeleteItem';
 import SplashPage from './scenes/SplashScreenPage';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import CalculateCurrency from './components/CalculateCurrency';
+import NotFoundPage from './scenes/NotFoundPage';
+import DetailsPage from './scenes/DetailsPage';
+
 function App() {
+
   const mode=useSelector ((state)=>state.mode);
   const theme=useMemo(()=>createTheme(themeSettings(mode)),[mode]);
   const isAuth= Boolean(useSelector((state)=>state.token));
@@ -29,14 +35,16 @@ function App() {
     <Route path="/home" element={<HomePage/>}/>
     <Route path="/add/:pageType?" element={<AddExpenseSavingPage/>}/>
     <Route path="/view/:pageType?" element={<ViewPage/>}/>
+    <Route path="/viewDetails/:pageType/:id" element={<DetailsPage/>}/>
     <Route path="/edit/:pageType?/:id" element={<EditPage/>}/>
     <Route path="/add/goal" element={<GoalPage/>}/>
     <Route path="/edit/goal/:id" element={<EditGoalPage/>}/>
     <Route path="/delete" element={<DeleteItem/>}/>
     <Route path="/calculate" element={<CalculateCurrency/>}/>
 
-    <Route path="*" element={<h1>Page not found</h1>}/>
+    <Route path="*" element={<NotFoundPage/>}/>
     </Routes>
+    <ToastContainer />
     </ThemeProvider>
   );
 }

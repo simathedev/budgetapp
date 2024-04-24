@@ -6,6 +6,7 @@ import {
     useMediaQuery,
     Typography,
     useTheme,
+    Card,
   } from "@mui/material";
   import { Formik } from "formik";
   import * as yup from "yup";
@@ -19,6 +20,9 @@ import FlexBetween from "../../components/FlexBetween";
 import CalculateCurrency from "../../components/CalculateCurrency";
 import ChooseCurrency from "../../components/RegistrationCurrency";
 import currency_symbols from '../../countrySymbols';
+import { toast } from 'react-toastify';
+import ProgressLoadWidget from "../widgets/ProgressLoadWidget";
+
 
   const registerSchema = yup.object().shape({
     firstName: yup.string().required("first name required"),
@@ -51,6 +55,7 @@ import currency_symbols from '../../countrySymbols';
 
 const Form=()=>{
     const [pageType, setPageType] = useState("login");
+    const[savingData,setSavingData]=useState(false);
     const { palette } = useTheme();
     const dispatch = useDispatch();
     const navigate = useNavigate();  
@@ -84,7 +89,32 @@ const Form=()=>{
       onSubmitProps.resetForm();
 
       if (savedUser){
+       setSavingData(false);
+        toast.success('Registered Successfully.', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
         setPageType("login");
+      }
+      else
+      {
+        setSavingData(false);
+        toast.error('Registration Unsuccessful', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }); 
       }
     }
 
@@ -105,6 +135,18 @@ const Form=()=>{
       const loggedIn = await loggedInResponse.json();
       onSubmitProps.resetForm();
       if (loggedIn&&loggedIn.user) {
+        setSavingData(false);
+        toast.success('Logged In Successfully.', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme:"colored",
+        });
+
       const  UpdatedBalance=loggedIn.user.balance;
       const newExchangeRate= await CalculateCurrency(loggedIn.user.currency,loggedIn.user.currency);
       const selectedSymbol =await currency_symbols[loggedIn.user.currency];
@@ -148,6 +190,19 @@ const Form=()=>{
        console.log("balance logged user: ",loggedIn.user.balance)
         navigate("/home");
       }
+      else{
+        setSavingData(false)
+        toast.error('Login Unsuccessful', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }); 
+      }
 
     }
     const balanceCheck=useSelector((state)=>state.balance)
@@ -155,8 +210,18 @@ const Form=()=>{
 
 
     const handleFormSubmit=async(values, onSubmitProps)=>{
-      if (isLogin) await login(values, onSubmitProps);
-      if (isRegister) await register(values, onSubmitProps);    
+      if (isLogin)
+      {
+        setSavingData(true);
+        await login(values, onSubmitProps);
+
+      }
+      if (isRegister)
+      {
+        setSavingData(true);
+        await register(values, onSubmitProps);    
+
+      }
     }
 
 
@@ -185,8 +250,29 @@ const Form=()=>{
                         "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                       }}
                      >
+                       {savingData&&(
+                        <Card
+                        sx={{width:'60%', 
+           position: 'absolute',
+            top: '50%',
+            left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex:9999,
+          borderRadius:4,
+        }}
+                        >
+                        {isRegister?(
+                      <ProgressLoadWidget text={"Please Wait"} name={"Registering"}/>
+
+                        ):(
+                          <ProgressLoadWidget text={"Please Wait"} name={"Logging In"}/>
+
+                        )}
+                        </Card>
+                      )}
                       {isRegister && (
                         <> 
+
                       <TextField
                       label="First Name"
                       onBlur={handleBlur}

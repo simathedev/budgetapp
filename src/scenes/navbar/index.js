@@ -24,7 +24,7 @@ import { setMode, setLogout } from "../../state/index";
 import { useNavigate } from "react-router-dom";
 import CurrencyConvert from "../../components/CurrencyConvert";
 import CreditsWidget from "../../components/Credits";
-
+import { toast } from 'react-toastify';
   
   const Navbar=()=>{
     const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -40,6 +40,7 @@ import CreditsWidget from "../../components/Credits";
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
+
   
   const handleHelpClicked = () => {
     setHelpClicked(!helpClick);
@@ -51,6 +52,17 @@ import CreditsWidget from "../../components/Credits";
   const fullName = `${capitalizeFirstLetter(user.firstName)} ${capitalizeFirstLetter(user.lastName)}`;
   const handleLogout = () => {
    // dispatch(setLogout());
+   toast.success('Logged Out Successfully.', { 
+    // Position of the notification
+    autoClose: 5000, // Duration before the notification automatically closes (in milliseconds)
+    hideProgressBar: true, // Whether to hide the progress bar
+    closeOnClick: true, // Whether clicking the notification closes it
+    pauseOnHover: true, // Whether hovering over the notification pauses the autoClose timer
+    draggable: true, // Whether the notification can be dragged
+    progress: undefined, // Custom progress bar (can be a React element)
+    theme: "colored",
+    // Other options for customizing the notification
+  });
     navigate("/signIn");
   };
     return(

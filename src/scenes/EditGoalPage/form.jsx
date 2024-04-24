@@ -10,15 +10,20 @@ import {
   Collapse,
   Alert,
   useTheme,
+  Card,
   } from "@mui/material";
   import { Formik } from "formik";
   import {Close } from '@mui/icons-material';
 import * as yup from "yup";
 import { useNavigate,useParams } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
-import { setBalance } from "../../state";
+import { setBalance, setSaving } from "../../state";
 import FlexBetween from "../../components/FlexBetween";
-import { Label } from "@mui/icons-material"; 
+import { Label } from "@mui/icons-material";
+import { toast } from 'react-toastify';
+import LoadingWidget from "../widgets/LoadingWidget";
+import ProgressLoadWidget from "../widgets/ProgressLoadWidget";
+
 
 const goalSchema = yup.object().shape({
   name: yup.string().required("goal title is required"),
@@ -38,6 +43,8 @@ const initialValuesGoal = {
 const Form=()=>{
 
     const [responseData,setResponseData]=useState([]);
+    const [isLoading,setIsLoading]=useState(true);
+    const [savingData,setSavingData]=useState(false);
    //change to get page
     let {pageType,id}=useParams();
     const { palette } = useTheme();
@@ -84,10 +91,14 @@ const apiUrl=process.env.NODE_ENV === 'production' ?
                 "Content-Type": "application/json",
             },
         });
-        const data = await response.json();
-        setResponseData(data.data);
-        console.log("response data from update goal page: ",data.data);
-
+        if (response.ok)
+        {
+          const data = await response.json();
+          setResponseData(data.data);
+          console.log("response data from update goal page: ",data.data);
+          setIsLoading(false);
+        }
+      
 
       
     }
@@ -128,13 +139,35 @@ const apiUrl=process.env.NODE_ENV === 'production' ?
                  body:JSON.stringify(values),
                 });
                 if (goalResponse.ok){
-               
+                  setSavingData(false);
+                  toast.success('Goal Successfully Updated.', { 
+                    // Position of the notification
+                    autoClose: 5000, // Duration before the notification automatically closes (in milliseconds)
+                    hideProgressBar: true, // Whether to hide the progress bar
+                    closeOnClick: true, // Whether clicking the notification closes it
+                    pauseOnHover: true, // Whether hovering over the notification pauses the autoClose timer
+                    draggable: true, // Whether the notification can be dragged
+                    progress: undefined, // Custom progress bar (can be a React element)
+                    theme: "colored",
+                    // Other options for customizing the notification
+                  });
                   navigate("/view/goals");
                 ;
                   onSubmitProps.resetForm(); 
                 }
                 else{
+                  setSavingData(false);
                   console.log("failed to submit the goals form");
+                  toast.error('Goal Update Unsuccessful', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    });
                 }
              
         }
@@ -148,7 +181,7 @@ const apiUrl=process.env.NODE_ENV === 'production' ?
     
      const handleFormSubmit=async(values, onSubmitProps)=>{
         try{
-         
+          setSavingData(true);
             values={...values,user:userId}   
           await updateGoal(values, onSubmitProps); 
             console.log("submitting update goal values: ", values);
@@ -159,6 +192,10 @@ const apiUrl=process.env.NODE_ENV === 'production' ?
         } 
         }
 
+        if(isLoading)
+        {
+          return <LoadingWidget/>
+        }
 return(
 
 <Formik
@@ -179,28 +216,9 @@ return(
         resetForm,
       }) => (
         <form onSubmit={handleSubmit}>
-<Box sx={{ width: '100%' }}>
-<Collapse in={open}>
-<Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setOpen(false);
-              }}
-            >
-              <Close fontSize="inherit" />
-            </IconButton>
-          }
-          sx={{ mb: 2 }}
-        >
-          {pageVariable} has been successfully created!
-        </Alert>
-</Collapse>
-</Box>
-<Box
+
+        <Box
+        position="relative"
             display="grid"
             gap="30px"
             gridTemplateColumns="repeat(4, minmax(0, 1fr))"
@@ -208,6 +226,20 @@ return(
               "& > div": { gridColumn: isNonMobile ? undefined : "span 5" },
             }}
           >
+               {savingData&&(
+                        <Card
+                        sx={{width:isNonMobile?'60%':'90%', 
+           position: 'absolute',
+            top: '50%',
+            left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex:9999,
+          borderRadius:4,
+        }}
+                        >
+        <ProgressLoadWidget text={"Updating"} name={"Goal"}/>
+                        </Card>
+                      )}
             <>
             <TextField
                   label="Goal Title"

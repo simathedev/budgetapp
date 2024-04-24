@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
 import {setBalance} from "../../state";
 import { useEffect,useState } from "react";
+import LoadingSmallWidget from "./LoadingSmallWidget";
 
 
 
@@ -25,6 +26,7 @@ const BalanceWidget=()=>{
     const expense=useSelector((state)=>state.expense);
     const saving=useSelector((state)=>state.saving);
     const[responseData,setResponseData]=useState([]);
+   // const[isLoading,setIsLoading]=useState(true);
 
 
     const getBalance=async()=>{
@@ -34,6 +36,7 @@ const BalanceWidget=()=>{
       const FinalAmount=parseFloat(balance*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 1, });
       console.log("converted amount: ",FinalAmount);
       setResponseData(FinalAmount);
+      //setIsLoading(false);
       }
       catch(err)
       {
@@ -44,7 +47,8 @@ const BalanceWidget=()=>{
     useEffect(()=>{
       getBalance();
     },[selectedExchangeRate]);
-    
+
+
     return(
         <WidgetWrapper
         alignItems="center"

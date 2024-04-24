@@ -6,6 +6,7 @@ import { useSelector,useDispatch } from "react-redux";
 import { useEffect,useState } from "react";
 import {setSaving} from  "../../state";
 import ChartWidget from "./ChartWidget/ChartWidget";
+import LoadingSmallWidget from "./LoadingSmallWidget";
 //import UpdateBalance from "../../components/UpdateBalance";
 
 
@@ -15,6 +16,7 @@ const SavingsWidget=()=>{
   const navigate = useNavigate();
     const{palette}=useTheme();
     const[responseData,setResponseData]=useState([]);
+    const [isLoading,setIsLoading]=useState(true);
     const dark =palette.neutral.dark;
     const medium=palette.neutral.medium;
     const main=palette.neutral.main;
@@ -42,15 +44,16 @@ const SavingsWidget=()=>{
             "Content-Type": "application/json",
         },
     });
-    const data = await response.json();
-    const FinalAmount=parseFloat(data.totalAmount*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 1, });
-    console.log("converted amount: ",FinalAmount);
-    setResponseData(FinalAmount);
-   // console.log("response data: ", data.totalAmount);
-    const savingAmount=data.totalAmount;
-    //const updatedBalance=saving
-    dispatch(setSaving({saving:savingAmount}));
-
+    if(response.ok)
+    {
+      const data = await response.json();
+      const FinalAmount=parseFloat(data.totalAmount*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 1, });
+      console.log("converted amount: ",FinalAmount);
+      setResponseData(FinalAmount);
+      const savingAmount=data.totalAmount;
+      dispatch(setSaving({saving:savingAmount}));
+      setIsLoading(false);
+    }
   
     }
     catch(err)
@@ -64,6 +67,16 @@ getTotalSavings();
   },[selectedExchangeRate])
 const savingTotal=useSelector((state)=>state.saving);
 console.log('saving total: ',savingTotal);
+ 
+if (isLoading)
+{
+  return(
+<WidgetWrapper >
+    <LoadingSmallWidget text={'loading...'} name={'Savings'} height={'310px'}/>
+</WidgetWrapper>
+  ) 
+}
+
     return(
         <WidgetWrapper
         
@@ -98,11 +111,6 @@ console.log('saving total: ',savingTotal);
             <Button onClick={()=>navigate("/view/savings")} >
                 view savings
                 </Button>
-           {/* <FlexBetween gap="1rem">
-                <Button>
-                delete savings
-            </Button>
-            </FlexBetween>*/}
             
             </Box>
              

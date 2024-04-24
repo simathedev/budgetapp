@@ -9,17 +9,11 @@ import {setExpense} from  "../../state";
 import { setBalance } from "../../state";
 import UpdateBalance from "../../components/UpdateBalance";
 import ChartWidget from "./ChartWidget/ChartWidget";
+import LoadingSmallWidget from "./LoadingSmallWidget";
 
 
 
 const ExpenseWidget=()=>{
-       /* 
-   To display the data involved
-       <h2>Currency Conversion</h2>
-      <p>Amount in {baseCurrency}: {amountInBaseCurrency}</p>
-      <p>Exchange Rate: {exchangeRates[selectedCurrency]}</p>
-      <p>Amount in {selectedCurrency}: {amountInTargetCurrency}</p>
-      */
     const dispatch = useDispatch();
     const navigate=useNavigate();
     const{palette}=useTheme();
@@ -33,7 +27,7 @@ const ExpenseWidget=()=>{
     const userId=`${user._id}`
     const token = useSelector((state) => state.token);    
     const[responseData,setResponseData]=useState([]);
-
+    const [isLoading,setIsLoading]=useState(true);
 
     const getTotalExpenses=async()=>{
         try{
@@ -50,17 +44,16 @@ const ExpenseWidget=()=>{
                     "Content-Type": "application/json",
                 },
             });
-            const data = await response.json();
-            //console.log("response data: ", data);
-            const FinalAmount=parseFloat(data.totalAmount*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 1, });
-            console.log("converted amount: ",FinalAmount);
-            setResponseData(FinalAmount);
-            const expenseAmount=data.totalAmount;
-           
-            dispatch(setExpense({expense:expenseAmount}));
-        
-            //include exported function that updates balance in db
-       
+            if(response.ok)
+            {
+                const data = await response.json();
+                const FinalAmount=parseFloat(data.totalAmount*selectedExchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2,  minimumIntegerDigits: 1, });
+                console.log("converted amount: ",FinalAmount);
+                setResponseData(FinalAmount);
+                const expenseAmount=data.totalAmount;
+                dispatch(setExpense({expense:expenseAmount}));
+                setIsLoading(false);
+            }       
        
         }
         catch(err)
@@ -73,8 +66,15 @@ const ExpenseWidget=()=>{
         getTotalExpenses();
     },[selectedCurrSymbol])
     const expenseTotal=useSelector((state)=>state.expense);
-    //console.log('expense total: ',expenseTotal);
-
+  
+    if (isLoading)
+    {
+      return(
+    <WidgetWrapper>
+        <LoadingSmallWidget text={'loading...'} name={'Expense'} height={'310px'}/>
+    </WidgetWrapper>
+      ) 
+    }
 
     return(
         <WidgetWrapper
