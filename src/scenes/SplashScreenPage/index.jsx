@@ -52,7 +52,7 @@ const SplashPage = () => {
             </Box>
             <AppFeatures/>
             <Box sx={{mt:'1rem'}}>
-            <Link to='/signIn' >   
+            <Link to='/signIn' style={{textDecoration:'none'}} >   
             <SignInButton />
             </Link>
             </Box>

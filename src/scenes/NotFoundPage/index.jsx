@@ -37,7 +37,7 @@ return(
 <Typography variant='h4' fontSize={isNonMobileScreens?'2rem':'1.4rem'} color='primary'>
   Page Not Found
 </Typography>
-<Link to='/home'>
+<Link to='/home' style={{textDecoration:'none'}}>
 <Button>Return To Homepage</Button>
 </Link>
           </Box>

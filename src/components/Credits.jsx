@@ -60,14 +60,14 @@ const CreditsWidget = ({handleHelpClicked}) => {
               </Typography>
 
               <FlexBetween>
-            <Link to="https://github.com/simathedev">
+            <Link to="https://github.com/simathedev" style={{textDecoration:'none'}}>
             <GitHub/>
             </Link>
               
-              <Link to="mailto:simathedev@gmail.com">
+              <Link to="mailto:simathedev@gmail.com" style={{textDecoration:'none'}}>
               <Email/>
               </Link>
-              <Link to="https://www.linkedin.com/in/simanye-m-b2118a221">
+              <Link to="https://www.linkedin.com/in/simanye-m-b2118a221" style={{textDecoration:'none'}}>
               <LinkedIn/>
               </Link>
               

@@ -280,7 +280,7 @@ import LoadingWidget from "../widgets/LoadingWidget";
 return(
 <Box sx={{ width: '100%',display:'flex',flexDirection:'column' }}>
     <Navbar/>
-    <Link to='/home'>
+    <Link to='/home' style={{textDecoration:'none'}}>
     <BackButton/>
 </Link>
 

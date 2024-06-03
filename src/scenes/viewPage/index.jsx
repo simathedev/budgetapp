@@ -297,7 +297,7 @@ return(
     View {pageType}
 
     </Typography>
-    <Link to='/home'>
+    <Link to='/home' style={{textDecoration:'none'}}>
 
     <BackButton sx={{
         margin:'0rem 3rem',
@@ -314,7 +314,7 @@ return(
             <TableRow style={{border:!isNonMobileScreens&&'none'}}>
                    
                    {pageType !== 'transactions' && (
-                       <Link to={pageType!='goals'?`/add/${pageType}`:`/add/goal`}>
+                       <Link to={pageType!='goals'?`/add/${pageType}`:`/add/goal`} style={{textDecoration:'none'}}>
                         <AddButton
                          onClick={() => {
                             navigate(pageType!='goals'?`/add/${pageType}`:`/add/goal`);

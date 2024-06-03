@@ -17,7 +17,7 @@ const EditGoalPage=()=>{
     return(
        <Box>
         <Navbar/>
-        <Link to={`/view/goals`}>
+        <Link to={`/view/goals`} style={{textDecoration:'none'}}>
         <BackButton/>
         </Link>
         <Box

@@ -18,7 +18,7 @@ const AddExpenseSavingPage=()=>{
 return(
     <Box>
         <Navbar/>
-        <Link to={`/view/${pageType}`}>
+        <Link to={`/view/${pageType}`} style={{textDecoration:'none'}}>
         <BackButton/>
         </Link>
         <Box
